@@ -222,11 +222,19 @@ function normalizePlayers(m) {
 
 function rankingSource(data, key) {
   const m = data?.minecraft || {};
-  const ranks = firstValue(m, ["rankings", "ranking", "leaderboards"], {}) || {};
-  const aliases = { playtime:["playtime","playTime","time"], kills:["kills","kill"], deaths:["deaths","death"], advancements:["advancements","achievements","advancement"], weekly:["weekly","weeklyActivity","weekActivity","activityWeekly","weeklyPlaytime"] };
-  for (const k of aliases[key] || [key]) {
-    if (Array.isArray(ranks?.[k])) return ranks[k];
-    if (Array.isArray(m?.[`${k}Ranking`])) return m[`${k}Ranking`];
+  const ranks = m.rankings && typeof m.rankings === "object" ? m.rankings : {};
+  if (Array.isArray(ranks[key])) return ranks[key];
+
+  // Older PEPE LIVE payload compatibility.
+  const legacy = {
+    playtime: ["playTime", "time"],
+    kills: ["kill"],
+    deaths: ["death"],
+    advancements: ["achievements", "advancement"],
+    weekly: ["weeklyActivity", "weekActivity", "weeklyPlaytime"]
+  };
+  for (const alias of legacy[key] || []) {
+    if (Array.isArray(ranks[alias])) return ranks[alias];
   }
   return [];
 }
@@ -237,7 +245,7 @@ function renderRanking(data, key = PEPE_RANKING_KEY) {
   const rows = rankingSource(data, key).slice(0, 10);
   if (!rows.length) {
     const labels = { playtime:"플레이타임", kills:"킬", deaths:"데스", advancements:"발전과제", weekly:"주간 활동" };
-    root.innerHTML = `<div class="mc-empty-state">${labels[key] || "선택한"} 랭킹 데이터가 아직 공개 API에 연결되지 않았습니다.</div>`;
+    root.innerHTML = `<div class="mc-empty-state">${labels[key] || "선택한"} 랭킹 데이터가 아직 없습니다.</div>`;
     return;
   }
   root.innerHTML = rows.map((r, i) => {
@@ -272,21 +280,21 @@ function renderMinecraftPortal(data) {
     } else if (online && Number(m.playersOnline || 0) === 0) {
       playerRoot.innerHTML = '<div class="mc-empty-state">현재 접속 중인 플레이어가 없습니다.</div>';
     } else {
-      playerRoot.innerHTML = '<div class="mc-empty-state">현재 접속 인원은 확인되지만 플레이어 이름 목록은 공개 API에 연결되지 않았습니다.</div>';
+      playerRoot.innerHTML = '<div class="mc-empty-state">현재 표시할 플레이어 정보가 없습니다.</div>';
     }
   }
 
-  const stats = firstValue(m, ["stats", "statistics", "serverStats"], {}) || {};
-  const totalPlayers = firstValue(stats, ["totalPlayers","players","uniquePlayers"], firstValue(m,["totalPlayers","uniquePlayers"], null));
-  const totalPlaytime = firstValue(stats, ["totalPlaytime","playtime","totalPlaytimeFormatted"], firstValue(m,["totalPlaytime"], null));
-  const totalDeaths = firstValue(stats, ["totalDeaths","deaths"], firstValue(m,["totalDeaths"], null));
-  const advancements = firstValue(stats, ["advancements","totalAdvancements","achievements"], firstValue(m,["totalAdvancements"], null));
+  const stats = m.stats && typeof m.stats === "object" ? m.stats : {};
+  const totalPlayers = stats.totalPlayers ?? m.totalPlayers ?? null;
+  const totalPlaytime = stats.totalPlaytime ?? m.totalPlaytime ?? null;
+  const totalDeaths = stats.totalDeaths ?? m.totalDeaths ?? null;
+  const advancements = stats.advancements ?? m.totalAdvancements ?? null;
   setText("#stat-total-players", formatStatValue(totalPlayers));
   setText("#stat-total-playtime", formatStatValue(totalPlaytime));
   setText("#stat-total-deaths", formatStatValue(totalDeaths));
   setText("#stat-advancements", formatStatValue(advancements));
   const anyStats = [totalPlayers,totalPlaytime,totalDeaths,advancements].some(v => v !== null && v !== undefined);
-  setText("#stats-note", anyStats ? "PEPE MANAGER 공개 데이터 기준 · 새로고침 시 갱신" : "통계 데이터는 아직 공개 API에 연결되지 않았습니다.");
+  setText("#stats-note", anyStats ? "PEPE MANAGER 공개 데이터 기준 · 새로고침 시 갱신" : "현재 표시할 서버 통계가 없습니다.");
   renderRanking(data, PEPE_RANKING_KEY);
 }
 
@@ -742,14 +750,14 @@ const PEPE_MC_INFO = {
   },
   "plugin-bridge": {
     icon: "📡",
-    kicker: "PEPE ORIGINAL · IN-HOUSE · v1.0.0",
+    kicker: "PEPE ORIGINAL · IN-HOUSE · v1.1.1",
     title: "PepeBridge",
-    lead: "Minecraft 서버의 핵심 상태를 PEPE Server Manager 쪽에서 읽을 수 있게 전달하는 조용한 상태 브리지입니다.",
+    lead: "Minecraft의 실시간 상태와 플레이 기록을 PEPE LIVE까지 이어주는 서버 데이터 브리지입니다.",
     body: [
-      "서버 TPS를 읽고 현재 접속 중인 각 플레이어의 플랫폼을 Java 또는 Bedrock으로 구분해 plugins/PepeBridge/status.json에 기록합니다.",
-      "Floodgate가 있으면 API로 Bedrock 여부를 확인하고, 그렇지 않은 환경에서도 Bedrock 접두사 규칙을 보조 판별에 사용합니다. 플레이어 명령어 없이 서버 관리 연동만 담당합니다."
+      "서버 TPS, 현재/최대 접속 인원, 서버 버전과 가동시간을 기록하고, 온라인 플레이어의 Java/Bedrock 플랫폼 정보를 함께 plugins/PepeBridge/status.json에 내보냅니다.",
+      "누적 플레이어·플레이타임·사망·발전과제 통계와 플레이타임·킬·데스·발전과제·주간 활동 TOP 10도 생성합니다. 이 데이터는 Minecraft Agent와 PEPE MANAGER를 거쳐 홈페이지의 LIVE STATUS, SERVER STATS, PEPE RANKING에 사용됩니다."
     ],
-    tags: ["TPS", "status.json", "Java / Bedrock", "Floodgate softdepend", "Server Manager"]
+    tags: ["TPS · 접속자", "SERVER STATS", "TOP 10 랭킹", "Java / Bedrock", "PEPE LIVE"]
   },
   "plugin-core": {
     icon: "🐸",

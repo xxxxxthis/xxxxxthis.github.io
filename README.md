@@ -195,8 +195,8 @@ PEPE MANAGER API 또는 Discord 연동 코드가 변경되는 버전은 별도�
 - SERVER STATS 공개 통계 영역 추가
 - PEPE RANKING 탭 UI 추가
 - 기존 접속 인증, Crossplay 안내, PEPE ORIGINAL PLUGINS 전체 이전
-- 신규 API 필드가 제공될 경우 접속자/통계/랭킹을 자동 표시하도록 확장형 연동 적용
-- 서비스워커 캐시 버전 1.5.0 갱신 및 `minecraft.html` 캐시 포함
+- PEPE LIVE 실시간 연동 완료: 접속자/플랫폼/통계/랭킹 데이터를 `/api/public/status`에서 직접 표시
+- 서비스워커 캐시 키를 `1.5.0-final`로 갱신하고 `minecraft.html` 캐시 포함
 
 ---
 
@@ -240,4 +240,6 @@ PEPE MANAGER와 홈페이지를 포함한 운영 시스템은 PEPE RESTAURANT �
 - PEPE ORIGINAL PLUGINS card/modal text is based on analysis of the 8 uploaded JARs.
 - Minecraft version/status uses only `GET /api/public/status` (`minecraft.version`); `/api/server-status` is not used.
 - Protected Minecraft addresses and private Discord invite links remain behind API authorization and are not embedded in GitHub Pages.
-- LIVE flow: PepeBridge -> Minecraft Agent -> PEPE MANAGER -> `/api/public/status` -> `minecraft.html`.
+- LIVE flow: PepeBridge 1.1.1 -> Minecraft Agent (LIVE 1.5.0 patch) -> PEPE MANAGER 5.2 -> `/api/public/status` -> `minecraft.html`.
+- Public Minecraft LIVE fields in active use: `players`, `playerPlatforms`, `stats`, `rankings`, `uptimeSeconds`, `tps`, `version`.
+- The historical `JAR-ANALYSIS-1.4.2.md` records the originally uploaded PepeBridge 1.0.0 JAR; production now runs PepeBridge 1.1.1 for PEPE LIVE.

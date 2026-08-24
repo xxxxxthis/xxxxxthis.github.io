@@ -14,6 +14,7 @@
       <a class="admin-brand" href="index.html">🐸 <span>PEPE ADMIN</span></a>
       <nav class="admin-nav">
         <button class="admin-tab active" data-tab="dashboard">📊 대시보드</button>
+        <button class="admin-tab" data-tab="support">📬 문의함 <b id="nav-support-count">0</b></button>
         <button class="admin-tab" data-tab="invite">📨 초대 요청 <b id="nav-invite-count">0</b></button>
         <button class="admin-tab" data-tab="minecraft">⛏️ 마크 인증 <b id="nav-mc-count">0</b></button>
         <button class="admin-tab" data-tab="users">👥 인증 유저</button>
@@ -50,6 +51,7 @@
           <div class="admin-stat-grid">
             <article><small>초대 대기</small><strong id="stat-invite">-</strong></article>
             <article><small>마크 인증 대기</small><strong id="stat-mc">-</strong></article>
+            <article><small>문의 대기</small><strong id="stat-support">-</strong></article>
             <article><small>오늘 승인</small><strong id="stat-approved">-</strong></article>
             <article><small>오늘 거절</small><strong id="stat-denied">-</strong></article>
             <article><small>마크 인증 유저</small><strong id="stat-verified">-</strong></article>
@@ -72,6 +74,11 @@
               <p>Ping <b id="live-ping">-</b> · Uptime <b id="live-uptime">-</b></p>
             </article>
           </div>
+        </section>
+
+        <section class="admin-pane" data-pane="support">
+          <div class="admin-section-head"><div><small>SUPPORT CENTER</small><h2>홈페이지 문의함</h2></div><span>문의 상태 변경 및 답변을 처리합니다.</span></div>
+          <div id="support-list" class="admin-list"></div>
         </section>
 
         <section class="admin-pane" data-pane="invite">
@@ -106,6 +113,6 @@
     </section>
   </main>
   <script src="config.js?v=1.3.9a"></script>
-  <script src="approval.js"></script>
+  <script src="approval.js?v=1.4.0"></script>
 </body>
 </html>

@@ -43,3 +43,20 @@ if(token()){$("#admin-login-view").hidden=true;$("#admin-app").hidden=false;Prom
 $("#admin-login")?.addEventListener("click",()=>location.href=C.adminAuthUrl||base+"/auth/admin");
 $("#admin-refresh")?.addEventListener("click",refreshCurrent);
 $("#admin-logout")?.addEventListener("click",()=>{sessionStorage.removeItem(KEY);location.reload()});
+$("#sync-notices")?.addEventListener("click", async () => {
+  const btn = $("#sync-notices");
+  const old = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "동기화 중...";
+  try {
+    const d = await api("/api/admin/sync-announcements", { method: "POST" });
+    btn.textContent = d.posted > 0 ? `✅ ${d.posted}건 게시` : "✅ 최신 상태";
+  } catch (e) {
+    console.error(e);
+    btn.textContent = "❌ 동기화 실패";
+  }
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = old;
+  }, 1600);
+});

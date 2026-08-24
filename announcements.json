@@ -1,5 +1,11 @@
 [
   {
+    "date": "2026-08-25",
+    "type": "update",
+    "title": "홈페이지 공지 Discord 자동 연동",
+    "text": "홈페이지에 새 공지가 등록되면 PEPE MANAGER가 변경사항을 감지해 Discord 공지 채널에도 자동으로 게시하도록 연동했습니다."
+  },
+  {
     "date": "2026-08-24",
     "type": "update",
     "title": "승인 계정 인증 유지 기능 추가",

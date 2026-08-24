@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090c0a">
+  <meta name="description" content="PEPE RESTAURANT 공식 홈페이지">
+  <meta property="og:title" content="PEPE RESTAURANT">
+  <meta property="og:description" content="PEPE RESTAURANT 공식 커뮤니티">
+  <meta property="og:type" content="website">
+  <title>PEPE RESTAURANT</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <nav>
+    <a class="brand" href="#top">🐸 <span>PEPE RESTAURANT</span></a>
+    <div class="nav-links">
+      <a href="#about">소개</a>
+      <a href="#system">시스템</a>
+      <a href="#mc">Minecraft</a>
+      <a href="#discord">Discord</a>
+      <a href="#staff">운영진</a>
+      <a href="#notices">공지</a>
+      <a class="join" href="#" data-discord>Discord 입장</a>
+    </div>
+  </nav>
+
+  <header id="top">
+    <div class="hero-left">
+      <small>OFFICIAL COMMUNITY</small>
+      <h1>WELCOME TO<br><em>PEPE RESTAURANT</em></h1>
+      <p>사람, 게임, 이야기 그리고 우리가 직접 만드는 시스템.<br>PEPE RESTAURANT 공식 커뮤니티에 오신 것을 환영합니다.</p>
+      <div class="hero-actions">
+        <a class="button" href="#" data-discord>Discord 참여하기 ↗</a>
+        <a class="button ghost" href="#mc">Minecraft 접속정보</a>
+      </div>
+    </div>
+
+    <aside class="hero-status card">
+      <div class="status-head">
+        <div>
+          <span class="label">LIVE STATUS</span>
+          <strong id="overall-state">상태 확인 중...</strong>
+        </div>
+        <span class="dot loading" id="overall-dot"></span>
+      </div>
+
+      <div class="status-grid">
+        <div><small>MINECRAFT</small><b id="mc-main-state">-</b></div>
+        <div><small>DISCORD</small><b id="discord-main-state">-</b></div>
+        <div><small>PLAYERS</small><b id="player-count">-</b></div>
+        <div><small>MEMBERS</small><b id="discord-member-count">-</b></div>
+      </div>
+
+      <button class="mini" id="refresh-all">전체 상태 새로고침</button>
+    </aside>
+  </header>
+
+  <main>
+    <section id="about">
+      <small>ABOUT US</small>
+      <h2>그냥 디스코드 서버가 아닙니다.</h2>
+      <p class="lead">편하게 이야기하고 함께 게임을 즐기는 커뮤니티이자, 필요한 기능을 직접 만들고 개선해 나가는 공간입니다.</p>
+      <div class="grid three">
+        <article>💬<h3>Community</h3><p>자유로운 대화와 함께 즐기는 커뮤니티.</p></article>
+        <article>🛠️<h3>Self-Built</h3><p>운영 환경에 맞춰 직접 개발하는 전용 시스템.</p></article>
+        <article>🎮<h3>Gaming</h3><p>Minecraft를 비롯한 다양한 게임을 함께.</p></article>
+      </div>
+    </section>
+
+    <section id="system">
+      <small>PEPE SYSTEMS</small>
+      <h2>우리 서버를 위해 직접 만듭니다.</h2>
+
+      <div class="grid two">
+        <article>
+          <h3>🛡️ PEPE MANAGER</h3>
+          <p>PEPE RESTAURANT를 위해 직접 설계·개발한 통합 관리 봇. 서버·유저 관리, 활동 시스템, 티켓, 역할 및 운영 자동화를 담당합니다.</p>
+          <mark>IN-HOUSE</mark>
+        </article>
+
+        <article>
+          <h3>🤖 꼬붕봇</h3>
+          <p>커뮤니티에서 사용하는 다양한 편의 기능을 제공하는 PEPE 전용 봇입니다.</p>
+          <mark>PEPE ONLY</mark>
+        </article>
+      </div>
+
+      <div class="feature-strip">
+        <div><b>🔐</b><span><strong>인증 시스템</strong><small>Discord ↔ Minecraft</small></span></div>
+        <div><b>📊</b><span><strong>활동 시스템</strong><small>XP · 레벨 · 랭킹</small></span></div>
+        <div><b>🎫</b><span><strong>티켓 시스템</strong><small>문의 · 신고 · 지원</small></span></div>
+        <div><b>⚙️</b><span><strong>자동화</strong><small>서버 전용 워크플로우</small></span></div>
+      </div>
+    </section>
+
+    <section id="mc" class="mc">
+      <div>
+        <small>PEPE MINECRAFT</small>
+        <h2>Java + Bedrock<br>Crossplay</h2>
+        <p class="lead">PEPE 멤버를 위한 Minecraft 서버. Discord ↔ Minecraft 인증 시스템을 통해 운영됩니다.</p>
+
+        <div class="mc-live">
+          <span class="dot loading" id="java-dot"></span>
+          <span>Java <b id="java-live">확인 중</b></span>
+          <span class="dot loading" id="bedrock-dot"></span>
+          <span>Bedrock <b id="bedrock-live">확인 중</b></span>
+        </div>
+      </div>
+
+      <article class="server">
+        <div class="server-row">
+          <div>
+            <b>💻 Java Edition</b>
+            <code id="java-address">-</code>
+          </div>
+          <button data-copy-target="java-address">복사</button>
+        </div>
+
+        <hr>
+
+        <div class="server-row">
+          <div>
+            <b>📱 Bedrock Edition</b>
+            <code id="bedrock-address">-</code>
+          </div>
+          <button data-copy-target="bedrock-address">복사</button>
+        </div>
+
+        <p>🔐 인증된 멤버만 접속할 수 있습니다.</p>
+      </article>
+    </section>
+
+    <section id="discord">
+      <small>DISCORD LIVE</small>
+      <h2>지금 PEPE는.</h2>
+
+      <div class="discord-panel">
+        <article>
+          <div class="discord-icon">💬</div>
+          <div>
+            <span class="muted">전체 멤버</span>
+            <strong id="discord-total">-</strong>
+          </div>
+        </article>
+
+        <article>
+          <div class="discord-icon">🟢</div>
+          <div>
+            <span class="muted">온라인</span>
+            <strong id="discord-online">-</strong>
+          </div>
+        </article>
+
+        <article class="discord-wide">
+          <div>
+            <span class="muted">SERVER</span>
+            <strong id="discord-name">PEPE RESTAURANT</strong>
+            <p id="discord-status-text">Discord 상태를 확인하고 있습니다.</p>
+          </div>
+          <a class="button" href="#" data-discord>서버 입장 ↗</a>
+        </article>
+      </div>
+
+      <p class="hint">※ 실시간 Discord 인원은 Discord의 Server Widget이 활성화되어 있을 때 자동 표시됩니다.</p>
+    </section>
+
+    <section id="staff">
+      <small>TEAM PEPE</small>
+      <h2>운영진</h2>
+      <div class="staff-grid" id="staff-list"></div>
+    </section>
+
+    <section id="rules">
+      <small>SERVER RULES</small>
+      <h2>간단하고 확실하게.</h2>
+      <div class="rules">
+        <div><span>01</span><p><b>핵·치트 사용 금지</b><br>악성 클라이언트 및 불공정 플레이를 금지합니다.</p></div>
+        <div><span>02</span><p><b>고의적인 서버 방해 금지</b><br>테러, 도배, 악의적인 서버 방해 행위를 금지합니다.</p></div>
+        <div><span>03</span><p><b>다른 유저 존중</b><br>건축물, 아이템, 플레이 영역을 존중해주세요.</p></div>
+        <div><span>04</span><p><b>운영진 안내 준수</b><br>분쟁 발생 시 운영진의 안내를 따라주세요.</p></div>
+      </div>
+    </section>
+
+    <section id="notices">
+      <div class="section-title-row">
+        <div>
+          <small>ANNOUNCEMENTS</small>
+          <h2>공지사항</h2>
+        </div>
+        <div class="filters">
+          <button class="filter active" data-filter="all">전체</button>
+          <button class="filter" data-filter="notice">공지</button>
+          <button class="filter" data-filter="update">업데이트</button>
+          <button class="filter" data-filter="minecraft">Minecraft</button>
+        </div>
+      </div>
+      <div class="timeline" id="notices-list"></div>
+    </section>
+
+    <section id="faq">
+      <small>FAQ</small>
+      <h2>자주 묻는 질문</h2>
+      <div class="faq-list">
+        <details><summary>PEPE RESTAURANT는 어떤 서버인가요?</summary><p>게임과 대화를 중심으로 운영되는 커뮤니티 서버입니다. 운영에 필요한 여러 시스템도 직접 제작하고 있습니다.</p></details>
+        <details><summary>Minecraft 서버는 누구나 접속할 수 있나요?</summary><p>Discord와 Minecraft 인증을 완료한 멤버를 대상으로 운영됩니다.</p></details>
+        <details><summary>PEPE MANAGER는 외부 봇인가요?</summary><p>아닙니다. PEPE RESTAURANT 운영 환경에 맞춰 자체 제작한 전용 관리 봇입니다.</p></details>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div>🐸</div>
+      <h2>READY TO JOIN?</h2>
+      <p>PEPE RESTAURANT에서 만나요.</p>
+      <a class="button" href="#" data-discord>Discord 참여하기 ↗</a>
+    </section>
+  </main>
+
+  <footer>
+    <b>🐸 PEPE RESTAURANT</b>
+    <span>© 2026 PEPE RESTAURANT</span>
+  </footer>
+
+  <button id="top-button" aria-label="맨 위로">↑</button>
+  <div id="toast">복사 완료!</div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

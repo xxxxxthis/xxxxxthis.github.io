@@ -1,0 +1,9 @@
+{
+  "name": "PEPE RESTAURANT",
+  "short_name": "PEPE",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090c0a",
+  "theme_color": "#090c0a",
+  "icons": []
+}

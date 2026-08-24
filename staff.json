@@ -1,0 +1,20 @@
+[
+  {
+    "name": "대장",
+    "role": "OWNER",
+    "emoji": "👑",
+    "description": "PEPE RESTAURANT 운영 및 시스템 총괄"
+  },
+  {
+    "name": "PEPE MANAGER",
+    "role": "SYSTEM",
+    "emoji": "🛡️",
+    "description": "자체 제작 통합 관리 시스템"
+  },
+  {
+    "name": "운영진 모집",
+    "role": "STAFF",
+    "emoji": "🐸",
+    "description": "staff.json에서 자유롭게 수정할 수 있습니다."
+  }
+]

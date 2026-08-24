@@ -261,13 +261,24 @@ if ("serviceWorker" in navigator && (location.protocol === "http:" || location.p
 // VERIFIED MINECRAFT SERVER LINKS
 // ======================================================
 const PEPE_TOKEN_KEY = "pepe_verified_token";
+const PEPE_INVITE_TOKEN_KEY = "pepe_invite_token";
+
+function readCookie(name) {
+  const m = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+  return m ? decodeURIComponent(m[1]) : "";
+}
 
 function getPepeToken() {
-  return sessionStorage.getItem(PEPE_TOKEN_KEY) || "";
+  return sessionStorage.getItem(PEPE_TOKEN_KEY)
+    || readCookie(PEPE_INVITE_TOKEN_KEY)
+    || localStorage.getItem(PEPE_INVITE_TOKEN_KEY)
+    || "";
 }
 
 function clearPepeToken() {
   sessionStorage.removeItem(PEPE_TOKEN_KEY);
+  localStorage.removeItem(PEPE_INVITE_TOKEN_KEY);
+  document.cookie = `${PEPE_INVITE_TOKEN_KEY}=; Max-Age=0; Path=/; Secure; SameSite=Lax`;
 }
 
 function setAuthMessage(text) {

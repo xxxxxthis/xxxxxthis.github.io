@@ -2,6 +2,18 @@
   {
     "date": "2026-08-24",
     "type": "update",
+    "title": "승인 계정 인증 유지 기능 추가",
+    "text": "Discord 초대 요청이 승인된 사용자는 브라우저 인증 정보를 유지해 Minecraft 서버 주소 확인 시 별도 Discord 인증을 다시 진행하지 않아도 됩니다."
+  },
+  {
+    "date": "2026-08-24",
+    "type": "update",
+    "title": "PEPE SYSTEMS UI 개선",
+    "text": "PEPE MANAGER, 꼬붕봇 및 인증·활동·티켓·자동화 시스템 소개 영역을 다크 카드형 UI와 상세 팝업 방식으로 개선했습니다."
+  },
+  {
+    "date": "2026-08-24",
+    "type": "update",
     "title": "홈페이지 실시간 연동 업데이트",
     "text": "PEPE MANAGER API와 연동하여 Discord 멤버 및 Minecraft 서버 상태를 실시간으로 표시합니다."
   },

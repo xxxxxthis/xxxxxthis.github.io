@@ -3,7 +3,9 @@ const $=s=>document.querySelector(s);
 const KEY="pepe_invite_token";
 const base=String(C.apiBase||"").replace(/\/+$/,"");
 
-function token(){return sessionStorage.getItem(KEY)||""}
+function setInviteToken(v){localStorage.setItem(KEY,v);document.cookie=`${KEY}=${encodeURIComponent(v)}; Max-Age=43200; Path=/; Secure; SameSite=Lax`}
+function clearInviteToken(){localStorage.removeItem(KEY);document.cookie=`${KEY}=; Max-Age=0; Path=/; Secure; SameSite=Lax`}
+function token(){const m=document.cookie.match(new RegExp(`(?:^|; )${KEY}=([^;]*)`));return m?decodeURIComponent(m[1]):(localStorage.getItem(KEY)||"")}
 function statusHtml(data){
   if(data.status==="none") return '<span class="status-pending">아직 요청하지 않았습니다.</span>';
   if(data.status==="pending") return '<span class="status-pending">⏳ 운영진 승인 대기 중입니다.</span>';
@@ -18,13 +20,13 @@ async function check(){
   if(!token()) return;
   try{
     const r=await fetch(base+"/api/invite/status",{cache:"no-store",headers:{Authorization:"Bearer "+token()}});
-    if(r.status===401){sessionStorage.removeItem(KEY);location.reload();return}
+    if(r.status===401){clearInviteToken();location.reload();return}
     const d=await r.json();
     $("#request-status").innerHTML=statusHtml(d);
   }catch{$("#request-status").textContent="상태 서버에 연결할 수 없습니다."}
 }
 const u=new URL(location.href),t=u.searchParams.get("pepe_token"),a=u.searchParams.get("pepe_auth");
-if(t){sessionStorage.setItem(KEY,t);u.searchParams.delete("pepe_token");history.replaceState({},"",u.pathname+u.search);location.reload()}
+if(t){setInviteToken(t);u.searchParams.delete("pepe_token");history.replaceState({},"",u.pathname+u.search);location.reload()}
 if(a){$("#login-box").insertAdjacentHTML("beforeend",`<p class="status-denied">Discord 인증 실패: ${a}</p>`)}
 if(token()){ $("#login-box").hidden=true; $("#request-box").hidden=false; check(); }
 $("#invite-login")?.addEventListener("click",()=>location.href=C.inviteAuthUrl||base+"/auth/invite");

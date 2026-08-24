@@ -4,7 +4,7 @@ window.PEPE_CONFIG = {
 
   // Discord Developer Portal의 Server Widget을 켠 뒤 Guild ID 입력
   // 비워두면 Discord 실시간 멤버 표시는 "설정 필요"로 표시됩니다.
-  discordGuildId: "",
+  discordGuildId: "1540851155263950848",
 
   javaAddress: "drake-formatting.tun.ply.gg",
   bedrockAddress: "drake-commodity.tun.ply.gg",
@@ -28,12 +28,6 @@ window.PEPE_STAFF = [
     "emoji": "🛡️",
     "description": "자체 제작 통합 관리 시스템"
   },
-  {
-    "name": "운영진 모집",
-    "role": "STAFF",
-    "emoji": "🐸",
-    "description": "staff.json에서 자유롭게 수정할 수 있습니다."
-  }
 ];
 window.PEPE_NOTICES = [
   {

@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#090c0a">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.svg">
   <meta name="description" content="PEPE RESTAURANT 공식 홈페이지">
   <meta property="og:title" content="PEPE RESTAURANT">
   <meta property="og:description" content="PEPE RESTAURANT 공식 커뮤니티">
@@ -112,25 +114,32 @@
       </div>
 
       <article class="server">
-        <div class="server-row">
-          <div>
-            <b>💻 Java Edition</b>
-            <code id="java-address">-</code>
-          </div>
-          <button data-copy-target="java-address">복사</button>
+        <div id="server-link-locked">
+          <b>🔐 승인된 멤버 전용</b>
+          <p>Discord에서 Minecraft 인증이 승인된 유저만 서버 접속 주소를 확인할 수 있습니다.</p>
+          <button class="verified-login" id="verified-login">Discord 인증 후 주소 확인</button>
+          <p class="auth-message" id="auth-message"></p>
         </div>
 
-        <hr>
-
-        <div class="server-row">
-          <div>
-            <b>📱 Bedrock Edition</b>
-            <code id="bedrock-address">-</code>
+        <div id="server-link-unlocked" hidden>
+          <div class="server-row">
+            <div>
+              <b>💻 Java Edition</b>
+              <code id="java-address">인증 후 표시</code>
+            </div>
+            <button data-copy-target="java-address">복사</button>
           </div>
-          <button data-copy-target="bedrock-address">복사</button>
+          <hr>
+          <div class="server-row">
+            <div>
+              <b>📱 Bedrock Edition</b>
+              <code id="bedrock-address">인증 후 표시</code>
+            </div>
+            <button data-copy-target="bedrock-address">복사</button>
+          </div>
+          <p>✅ Minecraft 인증이 승인된 계정입니다.</p>
+          <button class="auth-logout" id="auth-logout">인증 정보 지우기</button>
         </div>
-
-        <p>🔐 인증된 멤버만 접속할 수 있습니다.</p>
       </article>
     </section>
 

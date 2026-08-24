@@ -187,8 +187,7 @@ async function refreshLiveStatus() {
     setDot("#java-dot", minecraftOnline ? "ok" : "bad");
     setDot("#bedrock-dot", minecraftOnline ? "ok" : "bad");
 
-    setText("#java-address", m.javaAddress || C.javaAddress || "-");
-    setText("#bedrock-address", m.bedrockAddress || C.bedrockAddress || "-");
+
 
     // Discord panel
     setText("#discord-total", d.members ?? "-");
@@ -219,9 +218,7 @@ async function refreshLiveStatus() {
     setDot("#java-dot", "bad");
     setDot("#bedrock-dot", "bad");
 
-    // 주소는 API 장애 시에도 남겨둠
-    setText("#java-address", C.javaAddress || "-");
-    setText("#bedrock-address", C.bedrockAddress || "-");
+
     setText("#discord-status-text", "PEPE MANAGER API에 연결할 수 없습니다.");
     setText("#manager-status", "UNKNOWN");
     setText("#manager-uptime", "-");
@@ -260,3 +257,98 @@ if (topBtn) topBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" 
 if ("serviceWorker" in navigator && (location.protocol === "http:" || location.protocol === "https:")) {
   navigator.serviceWorker.register("service-worker.js").catch(() => {});
 }
+
+
+// ======================================================
+// VERIFIED MINECRAFT SERVER LINKS
+// ======================================================
+const PEPE_TOKEN_KEY = "pepe_verified_token";
+
+function getPepeToken() {
+  return sessionStorage.getItem(PEPE_TOKEN_KEY) || "";
+}
+
+function clearPepeToken() {
+  sessionStorage.removeItem(PEPE_TOKEN_KEY);
+}
+
+function setAuthMessage(text) {
+  setText("#auth-message", text || "");
+}
+
+function showServerLinks(unlocked) {
+  const locked = $("#server-link-locked");
+  const open = $("#server-link-unlocked");
+  if (locked) locked.hidden = !!unlocked;
+  if (open) open.hidden = !unlocked;
+}
+
+async function loadVerifiedServerLinks() {
+  const token = getPepeToken();
+  if (!token) {
+    showServerLinks(false);
+    return;
+  }
+
+  try {
+    const base = String(C.apiBase || "").replace(/\/+$/, "");
+    const r = await fetch(`${base}/api/private/server-links`, {
+      cache: "no-store",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (r.status === 401 || r.status === 403) {
+      clearPepeToken();
+      showServerLinks(false);
+      setAuthMessage("승인된 Minecraft 멤버만 주소를 확인할 수 있습니다.");
+      return;
+    }
+
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+
+    const data = await r.json();
+    setText("#java-address", data.javaAddress || "-");
+    setText("#bedrock-address", data.bedrockAddress || "-");
+    showServerLinks(true);
+  } catch (e) {
+    console.error("Verified server links:", e);
+    showServerLinks(false);
+    setAuthMessage("인증 서버에 연결할 수 없습니다.");
+  }
+}
+
+function handleOAuthReturn() {
+  const url = new URL(location.href);
+  const token = url.searchParams.get("pepe_token");
+  const state = url.searchParams.get("pepe_auth");
+
+  if (token) {
+    sessionStorage.setItem(PEPE_TOKEN_KEY, token);
+    url.searchParams.delete("pepe_token");
+    history.replaceState({}, "", url.pathname + url.search + url.hash);
+    showToast("Minecraft 인증 확인 완료");
+  } else if (state) {
+    const message = state === "denied"
+      ? "Minecraft 인증 역할이 없는 계정입니다."
+      : state === "invalid"
+      ? "Discord 인증 요청이 만료되었습니다."
+      : "Discord 인증 중 오류가 발생했습니다.";
+    setAuthMessage(message);
+    url.searchParams.delete("pepe_auth");
+    history.replaceState({}, "", url.pathname + url.search + url.hash);
+  }
+}
+
+$("#verified-login")?.addEventListener("click", () => {
+  location.href = C.authUrl || `${String(C.apiBase || "").replace(/\/+$/, "")}/auth/discord`;
+});
+
+$("#auth-logout")?.addEventListener("click", () => {
+  clearPepeToken();
+  showServerLinks(false);
+  setAuthMessage("");
+  showToast("인증 정보를 지웠습니다.");
+});
+
+handleOAuthReturn();
+loadVerifiedServerLinks();

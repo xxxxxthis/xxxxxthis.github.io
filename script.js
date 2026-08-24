@@ -227,6 +227,7 @@ async function refreshLiveStatus() {
     setText("#mc-main-state", minecraftOnline ? "ONLINE" : "OFFLINE");
     setText("#discord-main-state", discordOnline ? "ONLINE" : "OFFLINE");
     setText("#player-count", `${m.playersOnline ?? 0}/${m.playersMax ?? "-"}`);
+    setText("#mc-version-live", m.version || "정보 없음");
     setText("#discord-member-count", d.members ?? "-");
 
     // Minecraft panel
@@ -260,6 +261,7 @@ async function refreshLiveStatus() {
     setText("#overall-state", "API 연결 실패");
     setDot("#overall-dot", "bad");
     setText("#mc-main-state", "UNKNOWN");
+    setText("#mc-version-live", "확인 불가");
     setText("#discord-main-state", "UNKNOWN");
     setText("#java-live", "UNKNOWN");
     setText("#bedrock-live", "UNKNOWN");
@@ -690,32 +692,3 @@ document.querySelectorAll("#faq details").forEach(item => {
   render();
 })();
 
-// ===== LIVE MINECRAFT VERSION =====
-(() => {
-  const el = document.querySelector("#mc-version-live");
-  if (!el) return;
-
-  const pickVersion = data =>
-    data?.version ??
-    data?.minecraft?.version ??
-    data?.server?.version ??
-    data?.java?.version ??
-    data?.status?.version ??
-    null;
-
-  const updateVersion = async () => {
-    try {
-      const data = await apiFetch("/api/server-status");
-      const version = pickVersion(data);
-
-      el.textContent = version ? String(version) : "정보 없음";
-      el.classList.toggle("online", Boolean(version));
-    } catch {
-      el.textContent = "확인 불가";
-      el.classList.remove("online");
-    }
-  };
-
-  updateVersion();
-  setInterval(updateVersion, 60000);
-})();

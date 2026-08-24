@@ -1,13 +1,110 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#090c0a"><title>PEPE RESTAURANT · 초대 승인</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css"></head>
-<body><main class="portal">
-<div class="portal-top"><b>🐸 PEPE RESTAURANT · STAFF</b><a href="index.html">← 홈페이지</a></div>
-<section class="portal-card">
-<small>STAFF ONLY</small><h1>초대 요청 승인</h1>
-<p>ADMIN / MODERATOR 전용 페이지입니다. 요청자의 Discord 계정과 사유를 확인해 승인 또는 거절할 수 있습니다.</p>
-<div id="admin-login-box"><button class="portal-button" id="admin-login">운영진 Discord 인증</button></div>
-<div id="admin-panel" hidden><button class="portal-button secondary" id="refresh-list">목록 새로고침</button><div class="request-list" id="request-list"></div></div>
-</section></main>
-<script src="config.js"></script><script src="approval.js"></script></body></html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090c0a">
+  <title>PEPE ADMIN</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <aside class="admin-sidebar">
+      <a class="admin-brand" href="index.html">🐸 <span>PEPE ADMIN</span></a>
+      <nav class="admin-nav">
+        <button class="admin-tab active" data-tab="dashboard">📊 대시보드</button>
+        <button class="admin-tab" data-tab="invite">📨 초대 요청 <b id="nav-invite-count">0</b></button>
+        <button class="admin-tab" data-tab="minecraft">⛏️ 마크 인증 <b id="nav-mc-count">0</b></button>
+        <button class="admin-tab" data-tab="users">👥 인증 유저</button>
+        <button class="admin-tab" data-tab="history">📚 처리 내역</button>
+        <button class="admin-tab" data-tab="logs">🔎 관리자 로그</button>
+      </nav>
+      <a class="admin-home" href="index.html">← 홈페이지로</a>
+    </aside>
+
+    <section class="admin-main">
+      <div id="admin-login-view" class="admin-login-card">
+        <small>STAFF ONLY</small>
+        <h1>PEPE 관리자 대시보드</h1>
+        <p>ADMIN / MODERATOR 권한 확인 후 접근할 수 있습니다.</p>
+        <button class="portal-button" id="admin-login">운영진 Discord 인증</button>
+        <p id="admin-login-error" class="status-denied"></p>
+      </div>
+
+      <div id="admin-app" hidden>
+        <header class="admin-header">
+          <div>
+            <small>PEPE RESTAURANT</small>
+            <h1 id="admin-page-title">대시보드</h1>
+          </div>
+          <div class="admin-header-actions">
+            <span id="admin-name">STAFF</span>
+            <button id="admin-refresh" class="portal-button secondary">새로고침</button>
+            <button id="admin-logout" class="portal-button secondary">로그아웃</button>
+          </div>
+        </header>
+
+        <section class="admin-pane active" data-pane="dashboard">
+          <div class="admin-stat-grid">
+            <article><small>초대 대기</small><strong id="stat-invite">-</strong></article>
+            <article><small>마크 인증 대기</small><strong id="stat-mc">-</strong></article>
+            <article><small>오늘 승인</small><strong id="stat-approved">-</strong></article>
+            <article><small>오늘 거절</small><strong id="stat-denied">-</strong></article>
+            <article><small>마크 인증 유저</small><strong id="stat-verified">-</strong></article>
+            <article><small>계정 연결 유저</small><strong id="stat-linked">-</strong></article>
+          </div>
+          <div class="admin-live-grid">
+            <article>
+              <h3>💬 Discord</h3>
+              <strong id="live-discord">-</strong>
+              <p>전체 <b id="live-members">-</b> · 온라인 <b id="live-online">-</b></p>
+            </article>
+            <article>
+              <h3>⛏️ Minecraft</h3>
+              <strong id="live-minecraft">-</strong>
+              <p>접속자 <b id="live-players">-</b> · TPS <b id="live-tps">-</b></p>
+            </article>
+            <article>
+              <h3>🛡️ PEPE MANAGER</h3>
+              <strong id="live-manager">-</strong>
+              <p>Ping <b id="live-ping">-</b> · Uptime <b id="live-uptime">-</b></p>
+            </article>
+          </div>
+        </section>
+
+        <section class="admin-pane" data-pane="invite">
+          <div class="admin-section-head"><div><small>PENDING</small><h2>Discord 초대 요청</h2></div><span>처리 즉시 목록에서 사라지고 기록으로 백업됩니다.</span></div>
+          <div id="invite-list" class="admin-list"></div>
+        </section>
+
+        <section class="admin-pane" data-pane="minecraft">
+          <div class="admin-section-head"><div><small>PENDING</small><h2>Minecraft 인증 요청</h2></div><span>승인 시 인증 역할이 자동 지급됩니다.</span></div>
+          <div id="mc-list" class="admin-list"></div>
+        </section>
+
+        <section class="admin-pane" data-pane="users">
+          <div class="admin-section-head"><div><small>VERIFIED</small><h2>Minecraft 인증 유저</h2></div></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table"><thead><tr><th>Discord</th><th>Java</th><th>Bedrock</th></tr></thead><tbody id="mc-users"></tbody></table>
+          </div>
+        </section>
+
+        <section class="admin-pane" data-pane="history">
+          <div class="admin-section-head"><div><small>ARCHIVE</small><h2>초대 처리 내역</h2></div></div>
+          <div class="admin-table-wrap">
+            <table class="admin-table"><thead><tr><th>결과</th><th>신청자</th><th>사유</th><th>처리시간</th><th>관리자 ID</th></tr></thead><tbody id="history-list"></tbody></table>
+          </div>
+        </section>
+
+        <section class="admin-pane" data-pane="logs">
+          <div class="admin-section-head"><div><small>AUDIT LOG</small><h2>관리자 활동 로그</h2></div></div>
+          <div id="admin-log-list" class="admin-list"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <script src="config.js"></script>
+  <script src="approval.js"></script>
+</body>
+</html>

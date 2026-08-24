@@ -182,7 +182,16 @@ PEPE MANAGER API 또는 Discord 연동 코드가 변경되는 버전은 별도�
 
 ## 🧪 Current Website Version
 
-**PEPE RESTAURANT Website 1.4.1**
+**PEPE RESTAURANT Website 1.4.2**
+
+### 1.4.2
+
+- Minecraft 소개 영역에 **PEPE ORIGINAL PLUGINS** 쇼케이스 추가
+- 자체 제작 플러그인 8종 `IN-HOUSE` 카드 추가
+- 각 플러그인 카드 클릭 시 실제 JAR 기능 기준 상세 팝업 표시
+- 모바일/태블릿 반응형 카드 레이아웃 적용
+- 정적 자산 캐시 버전 1.4.2로 갱신
+
 
 주요 업데이트:
 

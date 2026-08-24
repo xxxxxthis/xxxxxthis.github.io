@@ -653,3 +653,21 @@ body.modal-open{overflow:hidden}
 }
 .mc-version-line b{color:#c9d2cb}
 .mc-version-line b.online{color:#b8ff5a}
+
+
+/* ===== 1.4.2 PEPE ORIGINAL PLUGINS ===== */
+.pepe-original{grid-column:1/-1;margin-top:8px;padding-top:28px;border-top:1px solid #222b24}
+.pepe-original-head{max-width:780px;margin-bottom:18px}
+.pepe-original-head>small{display:block;color:#b8ff5a;font-size:11px;font-weight:950;letter-spacing:.14em;margin-bottom:9px}
+.pepe-original-head h3{margin:0 0 9px;color:#edf4ee;font-size:clamp(25px,4vw,36px);letter-spacing:-.035em}
+.pepe-original-head p{margin:0;color:#858f88;line-height:1.7;font-size:13px}
+.pepe-plugin-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pepe-plugin-card{appearance:none;display:flex;min-height:160px;flex-direction:column;align-items:stretch;padding:18px;border:1px solid #222b24;border-radius:15px;background:#101512;color:#edf4ee;text-align:left;font:inherit;cursor:pointer;transition:.18s ease}
+.pepe-plugin-card:hover{transform:translateY(-3px);border-color:#405044;background:#131a15}
+.pepe-plugin-title{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;margin-bottom:14px}
+.pepe-plugin-title strong{font-size:14px;line-height:1.3;word-break:break-word}
+.pepe-plugin-title span{flex:0 0 auto;border:1px solid #3b4b3e;border-radius:999px;background:#151d17;color:#b8ff5a;padding:4px 7px;font-size:8px;font-weight:950;letter-spacing:.08em}
+.pepe-plugin-card p{margin:0;color:#818c84;font-size:11px;line-height:1.65}
+.pepe-plugin-card em{margin-top:auto;padding-top:16px;color:#b8ff5a;font-size:10px;font-style:normal;font-weight:850}
+@media(max-width:900px){.pepe-plugin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.pepe-original{padding-top:22px}.pepe-plugin-grid{grid-template-columns:1fr}.pepe-plugin-card{min-height:138px}}

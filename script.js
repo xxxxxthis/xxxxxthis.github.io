@@ -589,6 +589,94 @@ const PEPE_MC_INFO = {
       "서버 주소처럼 보호해야 하는 정보와 공개해도 되는 상태 정보를 분리해 제공하도록 구성했습니다."
     ],
     tags: ["Online", "Players", "TPS", "Version", "Live API"]
+  },
+  "plugin-adminbridge": {
+    icon: "🛠️",
+    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    title: "PepeAdminBridge",
+    lead: "외부 관리자 도구와 Minecraft 서버 사이의 관리 데이터를 연결하는 전용 브리지입니다.",
+    body: [
+      "JAR 설명에 명시된 exact-slot inventory/admin bridge 역할을 중심으로, 서버 관리 도구가 필요한 정보를 정확한 슬롯 단위로 다룰 수 있도록 연결합니다.",
+      "일반 플레이어용 명령어를 제공하는 플러그인이 아니라 PEPE 운영 환경의 관리자 기능을 뒷단에서 이어주는 관리용 구성요소입니다."
+    ],
+    tags: ["Admin Bridge", "Inventory", "Exact Slot", "PEPE 운영"]
+  },
+  "plugin-auth": {
+    icon: "🔐",
+    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    title: "PepeAuth",
+    lead: "PEPE Minecraft의 인증 여부를 기준으로 서버 접근을 관리하는 자체 인증 플러그인입니다.",
+    body: [
+      "관리자는 /인증관리 명령어로 Minecraft 인증 대상을 관리할 수 있으며, pepeauth.admin 권한은 기본적으로 OP에게 부여됩니다.",
+      "pepeauth.bypass 권한을 가진 관리자는 인증 제한을 우회할 수 있도록 설계되어 운영 상황에 맞는 예외 처리가 가능합니다."
+    ],
+    tags: ["/인증관리", "인증 관리", "접근 제어", "관리자 우회"]
+  },
+  "plugin-bedrock": {
+    icon: "📱",
+    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    title: "PepeBedrock",
+    lead: "Java와 Bedrock 접속 환경을 구분하고 Bedrock 이용자에게 필요한 안내를 제공하는 자체 연동 플러그인입니다.",
+    body: [
+      "/베드락 명령어로 Bedrock 접속 안내를 확인하고, /플랫폼 명령어로 현재 접속 플랫폼을 확인할 수 있습니다.",
+      "운영진은 /베드락관리 명령어와 pepebedrock.admin 권한을 통해 Bedrock 연동 관련 관리 기능을 사용할 수 있습니다."
+    ],
+    tags: ["/베드락", "/플랫폼", "/베드락관리", "Crossplay"]
+  },
+  "plugin-bridge": {
+    icon: "📡",
+    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    title: "PepeBridge",
+    lead: "PEPE Server Manager에 서버 상태를 전달하기 위한 조용한 경량 브리지입니다.",
+    body: [
+      "JAR 설명 기준으로 TPS와 Java/Bedrock 접속 정보를 PEPE Server Manager 쪽에 전달하는 역할을 담당합니다.",
+      "Bedrock 연동 플러그인을 soft dependency로 사용하므로 해당 환경에서는 Java와 Bedrock 접속자를 구분하는 상태 연동이 가능합니다."
+    ],
+    tags: ["TPS", "Java/Bedrock", "Server Manager", "Status Bridge"]
+  },
+  "plugin-core": {
+    icon: "🐸",
+    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    title: "PepeCore",
+    lead: "PEPE Minecraft의 기본 안내와 핵심 운영 명령을 한곳에 모은 서버 코어 플러그인입니다.",
+    body: [
+      "/페페, /디코, /규칙, /접속자, /도움말로 서버 이용에 필요한 기본 정보를 제공합니다.",
+      "관리자는 /플러그인, /화이트리스트, /서버저장, /서버종료 명령어를 사용할 수 있으며 관련 관리 권한은 pepecore.admin으로 통합되어 있습니다."
+    ],
+    tags: ["도움말", "규칙", "화이트리스트", "서버 관리"]
+  },
+  "plugin-death": {
+    icon: "💀",
+    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    title: "PepeDeath",
+    lead: "플레이어의 마지막 사망 위치를 확인하고 다시 돌아갈 수 있게 돕는 사망 관리 플러그인입니다.",
+    body: [
+      "/사망위치 명령어로 마지막 사망 위치를 확인할 수 있습니다.",
+      "/사망복귀 명령어는 마지막 사망 위치로 귀환하는 기능이며 pepedeath.back 권한으로 제어됩니다."
+    ],
+    tags: ["/사망위치", "/사망복귀", "Death Location", "귀환"]
+  },
+  "plugin-features": {
+    icon: "📊",
+    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    title: "PepeServerFeatures",
+    lead: "야생 서버의 플레이어 통계, 등급, Discord 인증 연동 기능을 담당하는 자체 기능 플러그인입니다.",
+    body: [
+      "/내정보 명령어에서 플레이타임·킬·데스·인증·등급 정보를 확인할 수 있습니다.",
+      "/인증기능 명령어로 Discord 인증자 전용 기능을 확인할 수 있으며, pepe.admin 권한은 PEPE 관리자 등급에 사용됩니다."
+    ],
+    tags: ["플레이타임", "킬/데스", "등급", "인증 기능"]
+  },
+  "plugin-suite": {
+    icon: "🖥️",
+    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    title: "PepeServerSuite",
+    lead: "사이드바, 서버 안내, Discord Minecraft 인증 상태를 하나로 묶은 통합 UI·운영 플러그인입니다.",
+    body: [
+      "/discord, /rules, /serverinfo, /verifystatus 명령어로 서버 안내와 인증 상태를 확인할 수 있습니다.",
+      "플레이어는 /sidebar로 자신의 사이드바를 켜고 끌 수 있고, 관리자는 /sidebarall과 /pepereload로 전체 사이드바 허용 여부와 설정을 관리할 수 있습니다."
+    ],
+    tags: ["Sidebar", "Rules", "Server Info", "Verify Status"]
   }
 };
 

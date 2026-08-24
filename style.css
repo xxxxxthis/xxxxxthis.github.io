@@ -535,3 +535,94 @@ body.modal-open{overflow:hidden}
 .notice-card.notice-notice{border-left:3px solid #6e9fe8}
 .notice-card.notice-update{border-left:3px solid #e4bf47}
 .notice-card.notice-minecraft{border-left:3px solid #8fd848}
+
+
+/* ===== 1.4.0 PEPE MINECRAFT INTRO ===== */
+#mc.mc{row-gap:26px}
+.mc-intro{align-self:start}
+.mc-about-button{
+  display:inline-flex;
+  align-items:center;
+  margin-top:24px;
+  padding:10px 13px;
+  border:1px solid #344136;
+  border-radius:10px;
+  background:#121813;
+  color:#b8ff5a;
+  font:inherit;
+  font-size:12px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.mc-about-button:hover{background:#182019;border-color:#485a4c;transform:translateY(-1px)}
+.mc-feature-grid{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+.mc-feature-card{
+  appearance:none;
+  min-height:145px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  padding:20px;
+  border:1px solid #222b24;
+  border-radius:15px;
+  background:#101512;
+  color:#edf4ee;
+  text-align:left;
+  font:inherit;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.mc-feature-card:hover{transform:translateY(-3px);border-color:#405044;background:#131a15}
+.mc-feature-card>span{font-size:25px;margin-bottom:17px}
+.mc-feature-card strong{font-size:15px;margin-bottom:5px}
+.mc-feature-card small{color:#7e8981;letter-spacing:0;font-size:10px}
+.mc-feature-card em{margin-top:auto;padding-top:17px;color:#b8ff5a;font-style:normal;font-size:11px;font-weight:850}
+
+.mc-modal{position:fixed;inset:0;z-index:10020;display:grid;place-items:center;padding:22px;opacity:0;pointer-events:none;transition:.2s ease}
+.mc-modal.open{opacity:1;pointer-events:auto}
+.mc-modal-backdrop{position:absolute;inset:0;background:rgba(2,5,3,.8);backdrop-filter:blur(9px)}
+.mc-modal-panel{
+  position:relative;
+  width:min(680px,100%);
+  max-height:88vh;
+  overflow:auto;
+  padding:34px;
+  border:1px solid #2a352c;
+  border-radius:24px;
+  background:#101512;
+  box-shadow:0 28px 90px rgba(0,0,0,.5);
+  transform:translateY(14px) scale(.985);
+  transition:.22s ease;
+}
+.mc-modal.open .mc-modal-panel{transform:none}
+.mc-modal-close{position:absolute;right:18px;top:16px;width:38px;height:38px;border:1px solid #2a352c;border-radius:50%;background:#151c17;color:#9aa69d;font-size:24px;cursor:pointer}
+.mc-modal-close:hover{color:#b8ff5a;border-color:#455548}
+.mc-modal-icon{font-size:38px;margin-bottom:20px}
+.mc-modal-panel>small{color:#b8ff5a;font-weight:900;letter-spacing:.12em}
+.mc-modal-panel h2{font-size:clamp(34px,6vw,56px);line-height:1;margin:10px 0 16px;letter-spacing:-.055em}
+.mc-modal-lead{font-size:17px!important;color:#d5ddd7!important;line-height:1.7!important}
+.mc-modal-body{border-top:1px solid #222b24;margin-top:22px;padding-top:10px}
+.mc-modal-body p{color:#919c94;line-height:1.75;margin:14px 0}
+.mc-modal-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:24px}
+.mc-modal-tags span{border:1px solid #2b372d;background:#151c17;color:#a9b4ac;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800}
+
+/* FAQ refresh */
+.faq-lead{color:#7f8982;margin-top:-10px;margin-bottom:28px}
+#faq .faq-list{display:grid;gap:9px}
+#faq details{border:1px solid #222b24;background:#101512;border-radius:14px;overflow:hidden;transition:border-color .18s ease,background .18s ease}
+#faq details[open]{border-color:#39483c;background:#121814}
+#faq summary{list-style:none;cursor:pointer;padding:18px 20px;font-weight:850;color:#edf4ee;position:relative;padding-right:48px}
+#faq summary::-webkit-details-marker{display:none}
+#faq summary::after{content:"+";position:absolute;right:20px;top:50%;transform:translateY(-50%);color:#b8ff5a;font-size:22px;font-weight:500}
+#faq details[open] summary::after{content:"−"}
+#faq details p{margin:0;padding:0 20px 20px;color:#8e9991;line-height:1.75}
+#faq details p b{color:#cdd7cf}
+
+@media(max-width:800px){.mc-feature-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.mc-feature-grid{grid-template-columns:1fr}.mc-modal{padding:12px}.mc-modal-panel{padding:28px 20px 22px;border-radius:18px}}

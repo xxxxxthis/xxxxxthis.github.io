@@ -527,3 +527,124 @@ const PEPE_SYSTEM_INFO = {
   modal.querySelectorAll("[data-system-close]").forEach(el => el.addEventListener("click", close));
   document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
 })();
+
+
+// ===== PEPE MINECRAFT POPUP =====
+const PEPE_MC_INFO = {
+  overview: {
+    icon: "⛏️",
+    kicker: "PEPE MINECRAFT · SERVER",
+    title: "PEPE Minecraft",
+    lead: "PEPE RESTAURANT 멤버를 위한 Java + Bedrock Crossplay 서버입니다.",
+    body: [
+      "Discord 커뮤니티와 Minecraft 서버를 따로 운영하지 않고, PEPE MANAGER의 인증 시스템을 통해 하나의 멤버 시스템으로 연결합니다.",
+      "접속 정보는 공개하지 않으며 Minecraft 인증 역할을 가진 유저나 Discord 초대 요청이 승인된 사용자에게만 제공합니다.",
+      "홈페이지에서는 서버의 온라인 상태, 접속 인원, TPS와 버전을 실시간으로 확인할 수 있도록 PEPE MANAGER API와 연동되어 있습니다."
+    ],
+    tags: ["Java", "Bedrock", "Crossplay", "승인제", "PEPE 전용"]
+  },
+  crossplay: {
+    icon: "🌐",
+    kicker: "JAVA + BEDROCK",
+    title: "Crossplay",
+    lead: "서로 다른 에디션의 플레이어가 하나의 PEPE Minecraft 서버에서 함께 플레이합니다.",
+    body: [
+      "Java Edition과 Bedrock Edition 접속 경로를 각각 제공하며, 승인된 멤버는 홈페이지에서 자신에게 필요한 접속 정보를 확인할 수 있습니다.",
+      "에디션이 달라도 같은 커뮤니티 안에서 플레이할 수 있도록 서버 환경을 구성하고 있습니다."
+    ],
+    tags: ["Java Edition", "Bedrock Edition", "Crossplay"]
+  },
+  access: {
+    icon: "🔐",
+    kicker: "MEMBER ACCESS",
+    title: "승인제 운영",
+    lead: "PEPE Minecraft는 접속 주소를 공개하는 방식이 아니라 승인된 멤버 중심으로 운영합니다.",
+    body: [
+      "Minecraft 인증 요청이 승인되면 Discord에 인증 역할이 지급되고 서버 접속 정보를 확인할 수 있습니다.",
+      "Discord 초대 요청을 통해 운영진 승인을 받은 사용자도 홈페이지의 승인 정보를 이용해 서버 주소를 확인할 수 있습니다.",
+      "서버 주소와 Discord 초대 링크는 GitHub Pages 공개 파일에 저장하지 않고 PEPE MANAGER API가 권한 확인 후 전달합니다."
+    ],
+    tags: ["승인제", "Discord 인증", "접근 제어", "비공개 주소"]
+  },
+  account: {
+    icon: "🔗",
+    kicker: "ACCOUNT LINK",
+    title: "Minecraft 계정 연동",
+    lead: "Discord 계정과 Java/Bedrock 플레이어 정보를 연결해 인증된 멤버를 구분합니다.",
+    body: [
+      "운영진에게 Minecraft 인증 승인을 받은 뒤 Java 또는 Bedrock 닉네임을 등록할 수 있습니다.",
+      "Java와 Bedrock 계정 정보는 각각 관리할 수 있고, 운영진은 관리자 대시보드에서 인증 유저와 연결된 닉네임을 확인할 수 있습니다."
+    ],
+    tags: ["Discord", "Java 닉네임", "Bedrock 닉네임", "인증 역할"]
+  },
+  status: {
+    icon: "📡",
+    kicker: "LIVE SERVER STATUS",
+    title: "실시간 서버 상태",
+    lead: "홈페이지가 PEPE MANAGER API에서 Minecraft 상태를 직접 받아 표시합니다.",
+    body: [
+      "현재 서버 ONLINE/OFFLINE, 접속 인원, 최대 인원, TPS, 서버 버전과 같은 운영 정보를 실시간으로 확인할 수 있습니다.",
+      "서버 주소처럼 보호해야 하는 정보와 공개해도 되는 상태 정보를 분리해 제공하도록 구성했습니다."
+    ],
+    tags: ["Online", "Players", "TPS", "Version", "Live API"]
+  }
+};
+
+(() => {
+  const modal = document.querySelector("#mc-modal");
+  if (!modal) return;
+
+  const icon = document.querySelector("#mc-modal-icon");
+  const kicker = document.querySelector("#mc-modal-kicker");
+  const title = document.querySelector("#mc-modal-title");
+  const lead = document.querySelector("#mc-modal-lead");
+  const body = document.querySelector("#mc-modal-body");
+  const tags = document.querySelector("#mc-modal-tags");
+
+  const open = key => {
+    const info = PEPE_MC_INFO[key];
+    if (!info) return;
+
+    icon.textContent = info.icon;
+    kicker.textContent = info.kicker;
+    title.textContent = info.title;
+    lead.textContent = info.lead;
+    body.innerHTML = info.body.map(x => `<p>${x}</p>`).join("");
+    tags.innerHTML = info.tags.map(x => `<span>${x}</span>`).join("");
+
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+  };
+
+  const close = () => {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+  };
+
+  document.querySelectorAll("[data-mc-modal]").forEach(el => {
+    el.addEventListener("click", e => {
+      e.preventDefault();
+      open(el.dataset.mcModal);
+    });
+  });
+
+  modal.querySelectorAll("[data-mc-close]").forEach(el => {
+    el.addEventListener("click", close);
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && modal.classList.contains("open")) close();
+  });
+})();
+
+// FAQ는 한 번에 하나만 열리도록 정리
+document.querySelectorAll("#faq details").forEach(item => {
+  item.addEventListener("toggle", () => {
+    if (!item.open) return;
+    document.querySelectorAll("#faq details").forEach(other => {
+      if (other !== item) other.open = false;
+    });
+  });
+});

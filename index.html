@@ -12,7 +12,7 @@
   <meta property="og:type" content="website">
   <title>PEPE RESTAURANT</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css?v=1.3.9a">
+  <link rel="stylesheet" href="style.css?v=1.4.0">
 </head>
 <body>
   <div class="bg-glow"></div>
@@ -129,7 +129,7 @@
     </section>
 
     <section id="mc" class="mc">
-      <div>
+      <div class="mc-intro">
         <small>PEPE MINECRAFT</small>
         <h2>Java + Bedrock<br>Crossplay</h2>
         <p class="lead">PEPE 멤버를 위한 Minecraft 서버. Discord ↔ Minecraft 인증 시스템을 통해 운영됩니다.</p>
@@ -140,6 +140,10 @@
           <span class="dot loading" id="bedrock-dot"></span>
           <span>Bedrock <b id="bedrock-live">확인 중</b></span>
         </div>
+
+        <button class="mc-about-button" type="button" data-mc-modal="overview">
+          ⛏️ Minecraft 서버 소개 보기 →
+        </button>
       </div>
 
       <article class="server">
@@ -166,10 +170,40 @@
             </div>
             <button data-copy-target="bedrock-address">복사</button>
           </div>
-          <p>✅ Minecraft 인증이 승인된 계정입니다.</p>
+          <p>✅ 승인된 계정입니다.</p>
           <button class="auth-logout" id="auth-logout">인증 정보 지우기</button>
         </div>
       </article>
+
+      <div class="mc-feature-grid">
+        <button class="mc-feature-card" type="button" data-mc-modal="crossplay">
+          <span>🌐</span>
+          <strong>Crossplay</strong>
+          <small>Java + Bedrock</small>
+          <em>소개 보기 →</em>
+        </button>
+
+        <button class="mc-feature-card" type="button" data-mc-modal="access">
+          <span>🔐</span>
+          <strong>승인제 운영</strong>
+          <small>Discord 인증 · 초대 승인</small>
+          <em>소개 보기 →</em>
+        </button>
+
+        <button class="mc-feature-card" type="button" data-mc-modal="account">
+          <span>🔗</span>
+          <strong>계정 연동</strong>
+          <small>Java · Bedrock 닉네임</small>
+          <em>소개 보기 →</em>
+        </button>
+
+        <button class="mc-feature-card" type="button" data-mc-modal="status">
+          <span>📡</span>
+          <strong>실시간 상태</strong>
+          <small>접속자 · TPS · 버전</small>
+          <em>소개 보기 →</em>
+        </button>
+      </div>
     </section>
 
     <section id="discord">
@@ -246,10 +280,58 @@
     <section id="faq">
       <small>FAQ</small>
       <h2>자주 묻는 질문</h2>
+      <p class="faq-lead">가입부터 Minecraft 접속까지 자주 묻는 내용을 정리했습니다.</p>
+
       <div class="faq-list">
-        <details><summary>PEPE RESTAURANT는 어떤 서버인가요?</summary><p>게임과 대화를 중심으로 운영되는 커뮤니티 서버입니다. 운영에 필요한 여러 시스템도 직접 제작하고 있습니다.</p></details>
-        <details><summary>Minecraft 서버는 누구나 접속할 수 있나요?</summary><p>Discord와 Minecraft 인증을 완료한 멤버를 대상으로 운영됩니다.</p></details>
-        <details><summary>PEPE MANAGER는 외부 봇인가요?</summary><p>아닙니다. PEPE RESTAURANT 운영 환경에 맞춰 자체 제작한 전용 관리 봇입니다.</p></details>
+        <details>
+          <summary>PEPE RESTAURANT는 어떤 서버인가요?</summary>
+          <p>게임, 대화와 커뮤니티 활동을 중심으로 운영되는 PEPE 전용 서버입니다. PEPE MANAGER, 인증 시스템, 홈페이지와 관리자 도구 등 운영에 필요한 시스템도 직접 제작하고 있습니다.</p>
+        </details>
+
+        <details>
+          <summary>Discord 초대 링크는 어디서 받을 수 있나요?</summary>
+          <p>초대 링크는 공개하지 않습니다. 홈페이지의 <b>Discord 초대 요청</b> 페이지에서 Discord 계정으로 요청을 제출하면 운영진이 확인해 승인 또는 거절합니다. 승인된 계정에만 초대 링크가 표시됩니다.</p>
+        </details>
+
+        <details>
+          <summary>Minecraft 서버 주소는 어떻게 확인하나요?</summary>
+          <p>Minecraft 인증 역할을 가진 유저 또는 Discord 초대 요청이 승인된 유저는 홈페이지 Minecraft 영역에서 승인 상태를 확인한 뒤 Java/Bedrock 접속 주소를 볼 수 있습니다.</p>
+        </details>
+
+        <details>
+          <summary>초대 요청이 승인됐는데 서버 주소를 볼 때 다시 인증해야 하나요?</summary>
+          <p>같은 브라우저에서는 승인 정보가 일정 시간 유지되므로 보통 다시 인증할 필요가 없습니다. 쿠키나 사이트 저장 데이터를 삭제했거나 인증 정보가 만료된 경우에는 다시 Discord 계정 확인이 필요할 수 있습니다.</p>
+        </details>
+
+        <details>
+          <summary>Java와 Bedrock 둘 다 접속할 수 있나요?</summary>
+          <p>네. PEPE Minecraft는 Java + Bedrock Crossplay를 지원합니다. 승인된 멤버에게 각 에디션의 접속 정보를 홈페이지에서 제공합니다.</p>
+        </details>
+
+        <details>
+          <summary>Minecraft 인증 역할은 어떻게 받나요?</summary>
+          <p>Discord의 Minecraft 인증 시스템에서 인증 요청을 제출하고 운영진 승인을 받으면 <b>✅ MINECRAFT 인증</b> 역할이 지급됩니다. 이후 Java 또는 Bedrock 닉네임을 등록해 계정을 연결할 수 있습니다.</p>
+        </details>
+
+        <details>
+          <summary>인증 요청이나 초대 요청이 거절되면 어떻게 하나요?</summary>
+          <p>거절 사유가 해결된 뒤 다시 요청할 수 있습니다. 반복적인 허위 요청이나 서버 규칙을 위반하는 요청은 제한될 수 있습니다.</p>
+        </details>
+
+        <details>
+          <summary>PEPE MANAGER와 꼬붕봇은 어떤 봇인가요?</summary>
+          <p><b>PEPE MANAGER</b>는 서버 운영, 인증, 활동, 티켓과 자동화를 담당하는 자체 제작 관리 봇이고, <b>꼬붕봇</b>은 커뮤니티 편의 기능을 담당하는 PEPE 전용 봇입니다.</p>
+        </details>
+
+        <details>
+          <summary>문의나 신고는 어디서 하나요?</summary>
+          <p>Discord의 티켓 시스템을 이용해 문의·신고·지원 요청을 접수할 수 있습니다. 공개 채널에서 다루기 어려운 내용은 티켓을 이용해주세요.</p>
+        </details>
+
+        <details>
+          <summary>홈페이지 공지와 Discord 공지는 같은 내용인가요?</summary>
+          <p>홈페이지의 공지·업데이트·Minecraft 소식은 PEPE MANAGER와 연동되어 Discord 공지 채널에도 분류별 임베드 형태로 자동 게시됩니다.</p>
+        </details>
       </div>
     </section>
 
@@ -282,7 +364,22 @@
     </section>
   </div>
 
-  <script src="config.js?v=1.3.9a"></script>
-  <script src="script.js?v=1.3.9a"></script>
+
+  <div class="mc-modal" id="mc-modal" aria-hidden="true">
+    <div class="mc-modal-backdrop" data-mc-close></div>
+    <section class="mc-modal-panel" role="dialog" aria-modal="true" aria-labelledby="mc-modal-title">
+      <button class="mc-modal-close" type="button" data-mc-close aria-label="닫기">×</button>
+      <div class="mc-modal-icon" id="mc-modal-icon">⛏️</div>
+      <small id="mc-modal-kicker">PEPE MINECRAFT</small>
+      <h2 id="mc-modal-title">Minecraft Server</h2>
+      <p class="mc-modal-lead" id="mc-modal-lead"></p>
+      <div class="mc-modal-body" id="mc-modal-body"></div>
+      <div class="mc-modal-tags" id="mc-modal-tags"></div>
+    </section>
+  </div>
+
+
+  <script src="config.js?v=1.4.0"></script>
+  <script src="script.js?v=1.4.0"></script>
 </body>
 </html>

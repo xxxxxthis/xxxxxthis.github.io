@@ -2,8 +2,6 @@ const C = window.PEPE_CONFIG || {};
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 
-$$("[data-discord]").forEach(a => a.href = C.discordInvite || "#");
-
 const toast = $("#toast");
 
 function showToast(text = "복사 완료!") {

@@ -1,14 +1,8 @@
 [
   {
     "name": "Math",
-    "role": "OWNER",
+    "role": "OWNER · DEVELOPER",
     "emoji": "👑",
-    "description": "PEPE RESTAURANT 운영 및 시스템 총괄"
-  },
-  {
-    "name": "PEPE MANAGER",
-    "role": "SYSTEM",
-    "emoji": "🛡️",
-    "description": "자체 제작 통합 관리 시스템"
+    "description": "PEPE RESTAURANT 총괄 운영 · PEPE 시스템 개발 · Minecraft 운영"
   }
 ]

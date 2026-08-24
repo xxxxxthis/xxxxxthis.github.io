@@ -1,6 +1,12 @@
 [
   {
     "date": "2026-08-24",
+    "type": "update",
+    "title": "홈페이지 실시간 연동 업데이트",
+    "text": "PEPE MANAGER API와 연동하여 Discord 멤버 및 Minecraft 서버 상태를 실시간으로 표시합니다."
+  },
+  {
+    "date": "2026-08-24",
     "type": "notice",
     "title": "PEPE RESTAURANT 공식 홈페이지 오픈",
     "text": "PEPE RESTAURANT의 공식 홈페이지를 공개했습니다."

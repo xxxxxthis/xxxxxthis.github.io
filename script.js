@@ -1,1 +1,262 @@
-const C=window.PEPE_CONFIG||{},$=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);$$("[data-discord]").forEach(a=>a.href=C.discordInvite);const toast=$("#toast");function uptime(s){s=Number(s)||0;const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d?`${d}일 ${h}시간`:h?`${h}시간 ${m}분`:`${m}분`}async function refresh(){try{const r=await fetch(C.apiBase.replace(/\/$/,"")+"/api/public/status?t="+Date.now(),{cache:"no-store"});const x=await r.json(),d=x.discord||{},m=x.minecraft||{};$("#members").textContent=d.members??"-";$("#onlineMembers").textContent=d.onlineMembers??"-";$("#botStatus").textContent=d.bot?.online?"ONLINE":"OFFLINE";$("#botUptime").textContent=uptime(d.bot?.uptimeSeconds);$("#botPing").textContent=(d.bot?.pingMs>=0?d.bot.pingMs+" ms":"-");$("#mcStatus").textContent=m.online?"ONLINE":"OFFLINE";$("#players").textContent=`${m.playersOnline??0}/${m.playersMax??"-"}`;$("#tps").textContent=m.tps??"-";$("#version").textContent=m.version??"-";if(m.javaAddress)$("#java").textContent=m.javaAddress;if(m.bedrockAddress)$("#bedrock").textContent=m.bedrockAddress}catch(e){$("#botStatus").textContent="API ERROR";$("#mcStatus").textContent="API ERROR"}}$$("[data-copy]").forEach(b=>b.onclick=async()=>{await navigator.clipboard.writeText($("#"+b.dataset.copy).textContent);toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1200)});refresh();setInterval(refresh,30000);
+const C = window.PEPE_CONFIG || {};
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+$$("[data-discord]").forEach(a => a.href = C.discordInvite || "#");
+
+const toast = $("#toast");
+
+function showToast(text = "복사 완료!") {
+  if (!toast) return;
+  toast.textContent = text;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 1200);
+}
+
+function setText(selector, value) {
+  const el = $(selector);
+  if (el) el.textContent = value;
+}
+
+function setDot(selector, state) {
+  const el = $(selector);
+  if (!el) return;
+  el.classList.remove("ok", "bad", "loading");
+  el.classList.add(state === "ok" ? "ok" : state === "bad" ? "bad" : "loading");
+}
+
+function formatUptime(seconds) {
+  let s = Math.max(0, Number(seconds) || 0);
+  const d = Math.floor(s / 86400);
+  s %= 86400;
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  if (d > 0) return `${d}일 ${h}시간`;
+  if (h > 0) return `${h}시간 ${m}분`;
+  return `${m}분`;
+}
+
+async function fetchJson(url, timeout = 7000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    const r = await fetch(url, {
+      signal: controller.signal,
+      cache: "no-store"
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// 기존 1.2.0 복사 버튼 그대로 유지
+$$("[data-copy-target]").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    const target = document.getElementById(btn.dataset.copyTarget);
+    const value = target?.textContent?.trim() || "";
+    try {
+      await navigator.clipboard.writeText(value);
+      showToast();
+    } catch {
+      prompt("주소를 복사하세요:", value);
+    }
+  });
+});
+
+// GitHub Pages에서도 로딩 가능한 정적 JSON
+async function loadStaff() {
+  const root = $("#staff-list");
+  try {
+    const items = await fetchJson("staff.json");
+    root.innerHTML = "";
+    items.forEach(s => {
+      const el = document.createElement("article");
+      el.className = "staff-card";
+      el.innerHTML = `
+        <div class="staff-avatar">${s.emoji || "🐸"}</div>
+        <h3>${s.name}</h3>
+        <span class="staff-role">${s.role || "STAFF"}</span>
+        <p>${s.description || ""}</p>
+      `;
+      root.appendChild(el);
+    });
+  } catch {
+    root.innerHTML = "<p>운영진 정보를 불러오지 못했습니다.</p>";
+  }
+}
+
+let noticeData = [];
+
+function typeLabel(type) {
+  return ({
+    notice: "공지",
+    update: "업데이트",
+    minecraft: "Minecraft"
+  })[type] || type;
+}
+
+function renderNotices(filter = "all") {
+  const root = $("#notices-list");
+  const items = filter === "all" ? noticeData : noticeData.filter(n => n.type === filter);
+  root.innerHTML = "";
+
+  if (!items.length) {
+    root.innerHTML = "<p class='muted'>표시할 공지가 없습니다.</p>";
+    return;
+  }
+
+  items.forEach(n => {
+    const el = document.createElement("div");
+    el.className = "notice-card";
+    el.innerHTML = `
+      <time>${n.date}</time>
+      <div>
+        <h3>${n.title}</h3>
+        <p>${n.text}</p>
+      </div>
+      <span class="notice-type">${typeLabel(n.type)}</span>
+    `;
+    root.appendChild(el);
+  });
+}
+
+async function loadNotices() {
+  try {
+    noticeData = await fetchJson("announcements.json");
+    noticeData.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    renderNotices();
+  } catch {
+    $("#notices-list").innerHTML = "<p>공지사항을 불러오지 못했습니다.</p>";
+  }
+}
+
+$$(".filter").forEach(btn => {
+  btn.addEventListener("click", () => {
+    $$(".filter").forEach(x => x.classList.remove("active"));
+    btn.classList.add("active");
+    renderNotices(btn.dataset.filter);
+  });
+});
+
+async function refreshLiveStatus() {
+  // Loading state
+  setText("#overall-state", "상태 확인 중...");
+  setDot("#overall-dot", "loading");
+  setText("#mc-main-state", "-");
+  setText("#discord-main-state", "-");
+  setText("#player-count", "-");
+  setText("#discord-member-count", "-");
+  setText("#java-live", "확인 중");
+  setText("#bedrock-live", "확인 중");
+  setDot("#java-dot", "loading");
+  setDot("#bedrock-dot", "loading");
+
+  try {
+    const base = String(C.apiBase || "").replace(/\/+$/, "");
+    const data = await fetchJson(`${base}/api/public/status?t=${Date.now()}`);
+
+    if (!data?.ok) throw new Error(data?.error || "API ok=false");
+
+    const d = data.discord || {};
+    const m = data.minecraft || {};
+    const discordOnline = !!d.online;
+    const minecraftOnline = !!m.online;
+
+    // Header status card
+    if (discordOnline && minecraftOnline) {
+      setText("#overall-state", "All Systems Online");
+      setDot("#overall-dot", "ok");
+    } else if (discordOnline || minecraftOnline) {
+      setText("#overall-state", "Partial Online");
+      setDot("#overall-dot", "loading");
+    } else {
+      setText("#overall-state", "Systems Offline");
+      setDot("#overall-dot", "bad");
+    }
+
+    setText("#mc-main-state", minecraftOnline ? "ONLINE" : "OFFLINE");
+    setText("#discord-main-state", discordOnline ? "ONLINE" : "OFFLINE");
+    setText("#player-count", `${m.playersOnline ?? 0}/${m.playersMax ?? "-"}`);
+    setText("#discord-member-count", d.members ?? "-");
+
+    // Minecraft panel
+    setText("#java-live", minecraftOnline ? "ONLINE" : "OFFLINE");
+    setText("#bedrock-live", minecraftOnline ? "ONLINE" : "OFFLINE");
+    setDot("#java-dot", minecraftOnline ? "ok" : "bad");
+    setDot("#bedrock-dot", minecraftOnline ? "ok" : "bad");
+
+    setText("#java-address", m.javaAddress || C.javaAddress || "-");
+    setText("#bedrock-address", m.bedrockAddress || C.bedrockAddress || "-");
+
+    // Discord panel
+    setText("#discord-total", d.members ?? "-");
+    setText("#discord-online", d.onlineMembers ?? "-");
+    setText("#discord-name", d.name || "PEPE RESTAURANT");
+
+    const onlineText = d.onlineMembers == null
+      ? "온라인 인원 정보를 확인할 수 없습니다."
+      : `${d.onlineMembers}명이 현재 온라인입니다.`;
+    setText("#discord-status-text", onlineText);
+
+    setText("#manager-status", d.bot?.online ? "ONLINE" : "OFFLINE");
+    setText("#manager-uptime", formatUptime(d.bot?.uptimeSeconds));
+    const ping = typeof d.bot?.pingMs === "number" && d.bot.pingMs >= 0
+      ? `${d.bot.pingMs}ms`
+      : "-";
+    setText("#manager-ping", ping);
+
+  } catch (err) {
+    console.error("PEPE live API error:", err);
+
+    setText("#overall-state", "API 연결 실패");
+    setDot("#overall-dot", "bad");
+    setText("#mc-main-state", "UNKNOWN");
+    setText("#discord-main-state", "UNKNOWN");
+    setText("#java-live", "UNKNOWN");
+    setText("#bedrock-live", "UNKNOWN");
+    setDot("#java-dot", "bad");
+    setDot("#bedrock-dot", "bad");
+
+    // 주소는 API 장애 시에도 남겨둠
+    setText("#java-address", C.javaAddress || "-");
+    setText("#bedrock-address", C.bedrockAddress || "-");
+    setText("#discord-status-text", "PEPE MANAGER API에 연결할 수 없습니다.");
+    setText("#manager-status", "UNKNOWN");
+    setText("#manager-uptime", "-");
+    setText("#manager-ping", "-");
+  }
+}
+
+$("#refresh-all")?.addEventListener("click", refreshLiveStatus);
+
+loadStaff();
+loadNotices();
+refreshLiveStatus();
+
+// 30초마다 PEPE MANAGER API 갱신
+setInterval(refreshLiveStatus, 30 * 1000);
+
+// 기존 UI 애니메이션 유지
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add("visible");
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll("section, article, .feature-strip").forEach(el => {
+  el.classList.add("reveal");
+  observer.observe(el);
+});
+
+const topBtn = $("#top-button");
+window.addEventListener("scroll", () => {
+  if (topBtn) topBtn.style.display = window.scrollY > 700 ? "block" : "none";
+});
+if (topBtn) topBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+// Service Worker
+if ("serviceWorker" in navigator && (location.protocol === "http:" || location.protocol === "https:")) {
+  navigator.serviceWorker.register("service-worker.js").catch(() => {});
+}

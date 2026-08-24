@@ -86,6 +86,9 @@ async function loadStaff() {
 }
 
 let noticeData = [];
+let noticeFilter = "all";
+let noticeExpanded = false;
+const NOTICE_COLLAPSED_COUNT = 5;
 
 function typeLabel(type) {
   return ({
@@ -95,34 +98,70 @@ function typeLabel(type) {
   })[type] || type;
 }
 
-function renderNotices(filter = "all") {
-  const root = $("#notices-list");
-  const items = filter === "all" ? noticeData : noticeData.filter(n => n.type === filter);
-  root.innerHTML = "";
+function typeEmoji(type) {
+  return ({
+    notice: "📢",
+    update: "🛠️",
+    minecraft: "⛏️"
+  })[type] || "📌";
+}
 
-  if (!items.length) {
-    root.innerHTML = "<p class='muted'>표시할 공지가 없습니다.</p>";
+function filteredNotices() {
+  return noticeFilter === "all"
+    ? noticeData
+    : noticeData.filter(n => n.type === noticeFilter);
+}
+
+function updateNoticeToggle(total) {
+  const btn = $("#notice-toggle");
+  if (!btn) return;
+
+  if (total <= NOTICE_COLLAPSED_COUNT) {
+    btn.hidden = true;
     return;
   }
 
-  items.forEach(n => {
+  btn.hidden = false;
+  btn.textContent = noticeExpanded
+    ? "숨기기 ↑"
+    : `더보기 +${total - NOTICE_COLLAPSED_COUNT}`;
+}
+
+function renderNotices() {
+  const root = $("#notices-list");
+  const items = filteredNotices();
+  const visible = noticeExpanded
+    ? items
+    : items.slice(0, NOTICE_COLLAPSED_COUNT);
+
+  root.innerHTML = "";
+
+  if (!visible.length) {
+    root.innerHTML = "<p class='muted'>표시할 공지가 없습니다.</p>";
+    updateNoticeToggle(0);
+    return;
+  }
+
+  visible.forEach(n => {
     const el = document.createElement("div");
-    el.className = "notice-card";
+    el.className = `notice-card notice-${n.type || "notice"}`;
     el.innerHTML = `
       <time>${n.date}</time>
       <div>
-        <h3>${n.title}</h3>
+        <h3><span class="notice-icon">${typeEmoji(n.type)}</span>${n.title}</h3>
         <p>${n.text}</p>
       </div>
-      <span class="notice-type">${typeLabel(n.type)}</span>
+      <span class="notice-type notice-type-${n.type || "notice"}">${typeLabel(n.type)}</span>
     `;
     root.appendChild(el);
   });
+
+  updateNoticeToggle(items.length);
 }
 
 async function loadNotices() {
   try {
-    noticeData = await fetchJson("announcements.json");
+    noticeData = await fetchJson(`announcements.json?t=${Date.now()}`);
     noticeData.sort((a, b) => String(b.date).localeCompare(String(a.date)));
     renderNotices();
   } catch {
@@ -134,8 +173,19 @@ $$(".filter").forEach(btn => {
   btn.addEventListener("click", () => {
     $$(".filter").forEach(x => x.classList.remove("active"));
     btn.classList.add("active");
-    renderNotices(btn.dataset.filter);
+    noticeFilter = btn.dataset.filter || "all";
+    noticeExpanded = false;
+    renderNotices();
   });
+});
+
+$("#notice-toggle")?.addEventListener("click", () => {
+  noticeExpanded = !noticeExpanded;
+  renderNotices();
+
+  if (!noticeExpanded) {
+    $("#notices")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 });
 
 async function refreshLiveStatus() {

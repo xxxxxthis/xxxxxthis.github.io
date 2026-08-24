@@ -66,6 +66,7 @@ $$("[data-copy-target]").forEach(btn => {
 // GitHub Pages에서도 로딩 가능한 정적 JSON
 async function loadStaff() {
   const root = $("#staff-list");
+  if (!root) return;
   try {
     const items = await fetchJson("staff.json");
     root.innerHTML = "";
@@ -160,6 +161,7 @@ function renderNotices() {
 }
 
 async function loadNotices() {
+  if (!$("#notices-list")) return;
   try {
     noticeData = await fetchJson(`announcements.json?t=${Date.now()}`);
     noticeData.sort((a, b) => String(b.date).localeCompare(String(a.date)));
@@ -188,11 +190,119 @@ $("#notice-toggle")?.addEventListener("click", () => {
   }
 });
 
+
+let PEPE_MC_LIVE_DATA = null;
+let PEPE_RANKING_KEY = "playtime";
+
+function firstValue(obj, keys, fallback = null) {
+  for (const key of keys) {
+    if (obj && obj[key] !== undefined && obj[key] !== null) return obj[key];
+  }
+  return fallback;
+}
+
+function formatStatValue(value) {
+  if (value === undefined || value === null || value === "") return "-";
+  if (typeof value === "number") return value.toLocaleString("ko-KR");
+  return String(value);
+}
+
+function normalizePlayers(m) {
+  const raw = firstValue(m, ["players", "onlinePlayers", "playerList"], []);
+  if (!Array.isArray(raw)) return [];
+  return raw.map((p, i) => {
+    if (typeof p === "string") return { name: p, platform: "ONLINE" };
+    return {
+      name: p?.name || p?.username || p?.playerName || `Player ${i + 1}`,
+      platform: p?.platform || p?.edition || p?.client || "ONLINE",
+      avatar: p?.avatar || p?.headUrl || p?.skinHead || ""
+    };
+  });
+}
+
+function rankingSource(data, key) {
+  const m = data?.minecraft || {};
+  const ranks = firstValue(m, ["rankings", "ranking", "leaderboards"], {}) || {};
+  const aliases = { playtime:["playtime","playTime","time"], kills:["kills","kill"], deaths:["deaths","death"], advancements:["advancements","achievements","advancement"], weekly:["weekly","weeklyActivity","weekActivity","activityWeekly","weeklyPlaytime"] };
+  for (const k of aliases[key] || [key]) {
+    if (Array.isArray(ranks?.[k])) return ranks[k];
+    if (Array.isArray(m?.[`${k}Ranking`])) return m[`${k}Ranking`];
+  }
+  return [];
+}
+
+function renderRanking(data, key = PEPE_RANKING_KEY) {
+  const root = $("#mc-ranking-list");
+  if (!root) return;
+  const rows = rankingSource(data, key).slice(0, 10);
+  if (!rows.length) {
+    const labels = { playtime:"플레이타임", kills:"킬", deaths:"데스", advancements:"발전과제", weekly:"주간 활동" };
+    root.innerHTML = `<div class="mc-empty-state">${labels[key] || "선택한"} 랭킹 데이터가 아직 공개 API에 연결되지 않았습니다.</div>`;
+    return;
+  }
+  root.innerHTML = rows.map((r, i) => {
+    const name = typeof r === "string" ? r : (r?.name || r?.username || r?.playerName || "Unknown");
+    const value = typeof r === "string" ? "" : firstValue(r, ["value","score","playtime","kills","deaths","advancements","weekly","weeklyActivity","weeklyPlaytime"], "-");
+    return `<div class="mc-ranking-row"><span class="mc-ranking-pos">#${i+1}</span><strong class="mc-ranking-name">${name}</strong><span class="mc-ranking-value">${formatStatValue(value)}</span></div>`;
+  }).join("");
+}
+
+function renderMinecraftPortal(data) {
+  PEPE_MC_LIVE_DATA = data;
+  const m = data?.minecraft || {};
+  const online = !!m.online;
+  const tpsRaw = firstValue(m, ["tps", "tps1m", "currentTps"], null);
+  const tps = typeof tpsRaw === "number" ? tpsRaw.toFixed(1) : (tpsRaw ?? "-");
+  const uptimeRaw = firstValue(m, ["uptimeSeconds", "uptime", "serverUptimeSeconds"], null);
+  const uptime = typeof uptimeRaw === "number" ? formatUptime(uptimeRaw) : (uptimeRaw || "-");
+
+  setText("#mc-tps-live", tps);
+  setText("#live-player-count", `${m.playersOnline ?? 0}/${m.playersMax ?? "-"}`);
+  setText("#live-version", m.version || "-");
+  setText("#live-tps", tps);
+  setText("#live-uptime", uptime);
+  setText("#mc-live-label", online ? "ONLINE" : "OFFLINE");
+  setDot("#mc-live-dot", online ? "ok" : "bad");
+
+  const playerRoot = $("#mc-player-list");
+  if (playerRoot) {
+    const players = normalizePlayers(m);
+    if (players.length) {
+      playerRoot.innerHTML = players.map(p => `<article class="mc-player-card"><div class="mc-player-avatar">${p.avatar ? `<img src="${p.avatar}" alt="" loading="lazy">` : "🙂"}</div><div><strong>${p.name}</strong><small>${String(p.platform).toUpperCase()}</small></div></article>`).join("");
+    } else if (online && Number(m.playersOnline || 0) === 0) {
+      playerRoot.innerHTML = '<div class="mc-empty-state">현재 접속 중인 플레이어가 없습니다.</div>';
+    } else {
+      playerRoot.innerHTML = '<div class="mc-empty-state">현재 접속 인원은 확인되지만 플레이어 이름 목록은 공개 API에 연결되지 않았습니다.</div>';
+    }
+  }
+
+  const stats = firstValue(m, ["stats", "statistics", "serverStats"], {}) || {};
+  const totalPlayers = firstValue(stats, ["totalPlayers","players","uniquePlayers"], firstValue(m,["totalPlayers","uniquePlayers"], null));
+  const totalPlaytime = firstValue(stats, ["totalPlaytime","playtime","totalPlaytimeFormatted"], firstValue(m,["totalPlaytime"], null));
+  const totalDeaths = firstValue(stats, ["totalDeaths","deaths"], firstValue(m,["totalDeaths"], null));
+  const advancements = firstValue(stats, ["advancements","totalAdvancements","achievements"], firstValue(m,["totalAdvancements"], null));
+  setText("#stat-total-players", formatStatValue(totalPlayers));
+  setText("#stat-total-playtime", formatStatValue(totalPlaytime));
+  setText("#stat-total-deaths", formatStatValue(totalDeaths));
+  setText("#stat-advancements", formatStatValue(advancements));
+  const anyStats = [totalPlayers,totalPlaytime,totalDeaths,advancements].some(v => v !== null && v !== undefined);
+  setText("#stats-note", anyStats ? "PEPE MANAGER 공개 데이터 기준 · 새로고침 시 갱신" : "통계 데이터는 아직 공개 API에 연결되지 않았습니다.");
+  renderRanking(data, PEPE_RANKING_KEY);
+}
+
+$$('.ranking-tab').forEach(btn => btn.addEventListener('click', () => {
+  $$('.ranking-tab').forEach(x => x.classList.remove('active'));
+  btn.classList.add('active');
+  PEPE_RANKING_KEY = btn.dataset.ranking || 'playtime';
+  renderRanking(PEPE_MC_LIVE_DATA, PEPE_RANKING_KEY);
+}));
+
 async function refreshLiveStatus() {
   // Loading state
   setText("#overall-state", "상태 확인 중...");
   setDot("#overall-dot", "loading");
   setText("#mc-main-state", "-");
+  setText("#mc-page-version", "-");
   setText("#discord-main-state", "-");
   setText("#player-count", "-");
   setText("#discord-member-count", "-");
@@ -212,8 +322,13 @@ async function refreshLiveStatus() {
     const discordOnline = !!d.online;
     const minecraftOnline = !!m.online;
 
+    renderMinecraftPortal(data);
+
     // Header status card
-    if (discordOnline && minecraftOnline) {
+    if (document.body.classList.contains("minecraft-page")) {
+      setText("#overall-state", minecraftOnline ? "Server Online" : "Server Offline");
+      setDot("#overall-dot", minecraftOnline ? "ok" : "bad");
+    } else if (discordOnline && minecraftOnline) {
       setText("#overall-state", "All Systems Online");
       setDot("#overall-dot", "ok");
     } else if (discordOnline || minecraftOnline) {
@@ -228,6 +343,7 @@ async function refreshLiveStatus() {
     setText("#discord-main-state", discordOnline ? "ONLINE" : "OFFLINE");
     setText("#player-count", `${m.playersOnline ?? 0}/${m.playersMax ?? "-"}`);
     setText("#mc-version-live", m.version || "정보 없음");
+    setText("#mc-page-version", m.version || "정보 없음");
     setText("#discord-member-count", d.members ?? "-");
 
     // Minecraft panel
@@ -262,6 +378,7 @@ async function refreshLiveStatus() {
     setDot("#overall-dot", "bad");
     setText("#mc-main-state", "UNKNOWN");
     setText("#mc-version-live", "확인 불가");
+    setText("#mc-page-version", "확인 불가");
     setText("#discord-main-state", "UNKNOWN");
     setText("#java-live", "UNKNOWN");
     setText("#bedrock-live", "UNKNOWN");
@@ -592,91 +709,91 @@ const PEPE_MC_INFO = {
   },
   "plugin-adminbridge": {
     icon: "🛠️",
-    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    kicker: "PEPE ORIGINAL · IN-HOUSE · v1.2.0",
     title: "PepeAdminBridge",
-    lead: "외부 관리자 도구와 Minecraft 서버 사이의 관리 데이터를 연결하는 전용 브리지입니다.",
+    lead: "PEPE 관리자 도구가 게임 안의 플레이어 상태와 인벤토리를 정확하게 다룰 수 있게 이어주는 운영 전용 브리지입니다.",
     body: [
-      "JAR 설명에 명시된 exact-slot inventory/admin bridge 역할을 중심으로, 서버 관리 도구가 필요한 정보를 정확한 슬롯 단위로 다룰 수 있도록 연결합니다.",
-      "일반 플레이어용 명령어를 제공하는 플러그인이 아니라 PEPE 운영 환경의 관리자 기능을 뒷단에서 이어주는 관리용 구성요소입니다."
+      "온라인 플레이어의 체력·최대 체력·배고픔·포화도·월드와 좌표·핑·레벨·경험치·게임모드·손에 든 아이템·플레이타임·킬·데스와 인벤토리 슬롯 정보를 state.json으로 내보냅니다.",
+      "관리 도구의 request.json 요청을 받아 플레이어 강제 퇴장, 특정 슬롯 아이템 복제, 특정 슬롯 아이템 제거를 처리하고 response.json으로 결과를 돌려줍니다. 일반 유저용 명령어는 없는 백엔드 운영 플러그인입니다."
     ],
-    tags: ["Admin Bridge", "Inventory", "Exact Slot", "PEPE 운영"]
+    tags: ["관리자 브리지", "플레이어 상태", "Exact Slot", "인벤토리 관리", "kick / clone / remove"]
   },
   "plugin-auth": {
     icon: "🔐",
-    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    kicker: "PEPE ORIGINAL · IN-HOUSE · v1.2.0",
     title: "PepeAuth",
-    lead: "PEPE Minecraft의 인증 여부를 기준으로 서버 접근을 관리하는 자체 인증 플러그인입니다.",
+    lead: "Discord에서 승인된 Minecraft 닉네임만 서버에 들어올 수 있도록 지키는 PEPE 자체 인증 게이트입니다.",
     body: [
-      "관리자는 /인증관리 명령어로 Minecraft 인증 대상을 관리할 수 있으며, pepeauth.admin 권한은 기본적으로 OP에게 부여됩니다.",
-      "pepeauth.bypass 권한을 가진 관리자는 인증 제한을 우회할 수 있도록 설계되어 운영 상황에 맞는 예외 처리가 가능합니다."
+      "config.yml의 인증목록을 기준으로 접속자를 검사하며, 인증이 필요한 상태에서 목록에 없는 플레이어는 설정된 인증 안내 메시지와 함께 접속이 제한됩니다.",
+      "운영진은 /인증관리로 인증 목록을 관리할 수 있고, pepeauth.admin과 pepeauth.bypass 권한을 통해 관리 기능과 인증 우회 예외를 제어합니다. PepeServerFeatures와 PepeServerSuite도 이 인증 정보를 활용합니다."
     ],
-    tags: ["/인증관리", "인증 관리", "접근 제어", "관리자 우회"]
+    tags: ["/인증관리", "Discord 인증", "접속 제한", "pepeauth.bypass", "PepeAuth 연동"]
   },
   "plugin-bedrock": {
     icon: "📱",
-    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    kicker: "PEPE ORIGINAL · IN-HOUSE · v1.2.0",
     title: "PepeBedrock",
-    lead: "Java와 Bedrock 접속 환경을 구분하고 Bedrock 이용자에게 필요한 안내를 제공하는 자체 연동 플러그인입니다.",
+    lead: "Java와 Bedrock이 함께 접속하는 PEPE Crossplay 환경에서 Bedrock 플레이어를 알아보고 필요한 정보를 바로 안내합니다.",
     body: [
-      "/베드락 명령어로 Bedrock 접속 안내를 확인하고, /플랫폼 명령어로 현재 접속 플랫폼을 확인할 수 있습니다.",
-      "운영진은 /베드락관리 명령어와 pepebedrock.admin 권한을 통해 Bedrock 연동 관련 관리 기능을 사용할 수 있습니다."
+      "Floodgate API를 런타임에 감지해 Bedrock 플레이어 여부를 판별하고, 가능한 경우 Xbox 닉네임과 Device OS 정보를 읽어 접속 시 설정된 Bedrock 안내 메시지에 표시합니다.",
+      "/베드락으로 Java·Bedrock 접속 정보를 안내하고 /플랫폼으로 현재 에디션과 Xbox 정보를 확인할 수 있습니다. 운영진은 /베드락관리와 pepebedrock.admin 권한으로 연동 상태를 관리합니다."
     ],
-    tags: ["/베드락", "/플랫폼", "/베드락관리", "Crossplay"]
+    tags: ["Floodgate", "Bedrock 감지", "Xbox 닉네임", "Device OS", "/베드락 · /플랫폼"]
   },
   "plugin-bridge": {
     icon: "📡",
-    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    kicker: "PEPE ORIGINAL · IN-HOUSE · v1.0.0",
     title: "PepeBridge",
-    lead: "PEPE Server Manager에 서버 상태를 전달하기 위한 조용한 경량 브리지입니다.",
+    lead: "Minecraft 서버의 핵심 상태를 PEPE Server Manager 쪽에서 읽을 수 있게 전달하는 조용한 상태 브리지입니다.",
     body: [
-      "JAR 설명 기준으로 TPS와 Java/Bedrock 접속 정보를 PEPE Server Manager 쪽에 전달하는 역할을 담당합니다.",
-      "Bedrock 연동 플러그인을 soft dependency로 사용하므로 해당 환경에서는 Java와 Bedrock 접속자를 구분하는 상태 연동이 가능합니다."
+      "서버 TPS를 읽고 현재 접속 중인 각 플레이어의 플랫폼을 Java 또는 Bedrock으로 구분해 plugins/PepeBridge/status.json에 기록합니다.",
+      "Floodgate가 있으면 API로 Bedrock 여부를 확인하고, 그렇지 않은 환경에서도 Bedrock 접두사 규칙을 보조 판별에 사용합니다. 플레이어 명령어 없이 서버 관리 연동만 담당합니다."
     ],
-    tags: ["TPS", "Java/Bedrock", "Server Manager", "Status Bridge"]
+    tags: ["TPS", "status.json", "Java / Bedrock", "Floodgate softdepend", "Server Manager"]
   },
   "plugin-core": {
     icon: "🐸",
-    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    kicker: "PEPE ORIGINAL · IN-HOUSE · v1.2.1",
     title: "PepeCore",
-    lead: "PEPE Minecraft의 기본 안내와 핵심 운영 명령을 한곳에 모은 서버 코어 플러그인입니다.",
+    lead: "PEPE Minecraft에서 매일 쓰는 안내 명령과 서버 운영 명령을 한곳에 모은 기본 코어입니다.",
     body: [
-      "/페페, /디코, /규칙, /접속자, /도움말로 서버 이용에 필요한 기본 정보를 제공합니다.",
-      "관리자는 /플러그인, /화이트리스트, /서버저장, /서버종료 명령어를 사용할 수 있으며 관련 관리 권한은 pepecore.admin으로 통합되어 있습니다."
+      "/페페, /디코, /규칙, /접속자, /도움말로 서버 이용 정보를 제공하고, 플레이어 입장·퇴장 메시지도 설정에 따라 처리합니다. 기존 /help와 ? 계열 도움말도 PEPE 도움말 흐름으로 연결합니다.",
+      "pepecore.admin 권한을 가진 운영진은 /플러그인, /화이트리스트, /서버저장, /서버종료로 플러그인 확인, 화이트리스트 관리, 월드 저장과 서버 종료를 수행할 수 있습니다."
     ],
-    tags: ["도움말", "규칙", "화이트리스트", "서버 관리"]
+    tags: ["/페페 · /도움말", "규칙 · 접속자", "화이트리스트", "서버 저장/종료", "입퇴장 메시지"]
   },
   "plugin-death": {
     icon: "💀",
-    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    kicker: "PEPE ORIGINAL · IN-HOUSE · v1.2.0",
     title: "PepeDeath",
-    lead: "플레이어의 마지막 사망 위치를 확인하고 다시 돌아갈 수 있게 돕는 사망 관리 플러그인입니다.",
+    lead: "야생에서 죽은 뒤 길을 잃지 않도록 마지막 사망 지점을 기억해주는 PEPE 사망 지원 시스템입니다.",
     body: [
-      "/사망위치 명령어로 마지막 사망 위치를 확인할 수 있습니다.",
-      "/사망복귀 명령어는 마지막 사망 위치로 귀환하는 기능이며 pepedeath.back 권한으로 제어됩니다."
+      "플레이어가 사망하면 마지막 위치를 메모리에 기록하고, 좌표표시 설정이 켜져 있으면 사망 지점의 월드와 좌표를 알려줍니다.",
+      "/사망위치로 마지막 사망 지점을 다시 확인하고 /사망복귀로 그 위치에 텔레포트할 수 있습니다. 복귀 기능은 사망복귀사용 설정과 pepedeath.back 권한으로 제어됩니다."
     ],
-    tags: ["/사망위치", "/사망복귀", "Death Location", "귀환"]
+    tags: ["사망 위치 기록", "/사망위치", "/사망복귀", "좌표 안내", "야생 편의"]
   },
   "plugin-features": {
     icon: "📊",
-    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    kicker: "PEPE ORIGINAL · IN-HOUSE · v1.1.0",
     title: "PepeServerFeatures",
-    lead: "야생 서버의 플레이어 통계, 등급, Discord 인증 연동 기능을 담당하는 자체 기능 플러그인입니다.",
+    lead: "플레이어의 활동 기록과 인증 등급을 게임 안에서 보여주는 PEPE 야생 서버 기능 레이어입니다.",
     body: [
-      "/내정보 명령어에서 플레이타임·킬·데스·인증·등급 정보를 확인할 수 있습니다.",
-      "/인증기능 명령어로 Discord 인증자 전용 기능을 확인할 수 있으며, pepe.admin 권한은 PEPE 관리자 등급에 사용됩니다."
+      "PepeAuth의 인증목록을 읽어 관리자·인증자·일반 등급을 구분하고, TAB 닉네임에 등급을 표시합니다. TAB 헤더·푸터에는 플레이타임, 킬, 데스, 인증 상태 같은 정보를 주기적으로 갱신합니다.",
+      "/내정보에서 등급·인증·플레이타임·플레이어 킬·데스를 확인하고 /인증기능은 인증자 여부를 검사합니다. 레시피/루트 항목을 제외한 실제 발전과제 달성 시 서버 전체에 달성 알림도 방송합니다."
     ],
-    tags: ["플레이타임", "킬/데스", "등급", "인증 기능"]
+    tags: ["PepeAuth softdepend", "TAB 등급", "플레이타임 · 킬 · 데스", "발전과제 알림", "/내정보"]
   },
   "plugin-suite": {
     icon: "🖥️",
-    kicker: "PEPE ORIGINAL · IN-HOUSE",
+    kicker: "PEPE ORIGINAL · IN-HOUSE · v1.2.6",
     title: "PepeServerSuite",
-    lead: "사이드바, 서버 안내, Discord Minecraft 인증 상태를 하나로 묶은 통합 UI·운영 플러그인입니다.",
+    lead: "접속자에게 필요한 서버 정보와 인증 상태를 사이드바와 명령어로 한눈에 보여주는 PEPE 통합 UI 플러그인입니다.",
     body: [
-      "/discord, /rules, /serverinfo, /verifystatus 명령어로 서버 안내와 인증 상태를 확인할 수 있습니다.",
-      "플레이어는 /sidebar로 자신의 사이드바를 켜고 끌 수 있고, 관리자는 /sidebarall과 /pepereload로 전체 사이드바 허용 여부와 설정을 관리할 수 있습니다."
+      "플레이어별 사이드바를 생성해 접속 인원, 플레이어명, 핑, 인증 상태와 Java/Bedrock 플랫폼 정보를 표시합니다. 개인별 ON/OFF와 서버 전체 허용 상태는 sidebar-prefs.txt에 저장되어 재시작 후에도 유지됩니다.",
+      "PepeAuth config.yml의 인증목록을 비동기로 읽어 인증 여부를 캐시하며 /verifystatus에서 상태와 플랫폼을 확인합니다. /discord, /rules, /serverinfo로 서버 안내를 제공하고 운영진은 /sidebarall과 /pepereload로 UI 설정을 관리합니다."
     ],
-    tags: ["Sidebar", "Rules", "Server Info", "Verify Status"]
+    tags: ["개인 사이드바", "PepeAuth 연동", "인증 상태", "Java / Bedrock", "/sidebar · /verifystatus"]
   }
 };
 

@@ -11,6 +11,8 @@ Discord와 Minecraft를 연결하는 인증 시스템부터 서버 상태, 공�
 
 ## ✨ 주요 기능
 
+> Website **1.5.0 · PEPE LIVE** — Minecraft 정보를 전용 `minecraft.html` 페이지로 분리하고 LIVE STATUS, 접속자, 서버 통계, 랭킹 UI를 확장했습니다.
+
 ### ⛏️ PEPE Minecraft
 
 Java Edition과 Bedrock Edition의 Crossplay를 지원하는 PEPE 전용 Minecraft 서버입니다.
@@ -182,6 +184,22 @@ PEPE MANAGER API 또는 Discord 연동 코드가 변경되는 버전은 별도�
 
 ## 🧪 Current Website Version
 
+**PEPE RESTAURANT Website 1.5.0**
+
+### 1.5.0 · PEPE LIVE
+
+- Minecraft 상세 정보를 메인 홈페이지에서 `minecraft.html` 전용 페이지로 분리
+- 메인에는 Minecraft 전용 페이지 진입 쇼케이스만 유지
+- Minecraft LIVE STATUS 대시보드 추가
+- WHO'S ONLINE 플레이어 영역 추가
+- SERVER STATS 공개 통계 영역 추가
+- PEPE RANKING 탭 UI 추가
+- 기존 접속 인증, Crossplay 안내, PEPE ORIGINAL PLUGINS 전체 이전
+- 신규 API 필드가 제공될 경우 접속자/통계/랭킹을 자동 표시하도록 확장형 연동 적용
+- 서비스워커 캐시 버전 1.5.0 갱신 및 `minecraft.html` 캐시 포함
+
+---
+
 **PEPE RESTAURANT Website 1.4.2**
 
 ### 1.4.2
@@ -213,3 +231,13 @@ PEPE MANAGER API 또는 Discord 연동 코드가 변경되는 버전은 별도�
 **PEPE RESTAURANT · 우리 서버를 위해 직접 만듭니다.**
 
 PEPE MANAGER와 홈페이지를 포함한 운영 시스템은 PEPE RESTAURANT 환경에 맞춰 직접 설계하고 지속적으로 개선합니다.
+
+
+## 1.5.0 Stable + LIVE integration baseline
+
+- Base: PEPE RESTAURANT 1.4.2 JAR VERIFIED stable frontend.
+- Minecraft details are separated into `minecraft.html`.
+- PEPE ORIGINAL PLUGINS card/modal text is based on analysis of the 8 uploaded JARs.
+- Minecraft version/status uses only `GET /api/public/status` (`minecraft.version`); `/api/server-status` is not used.
+- Protected Minecraft addresses and private Discord invite links remain behind API authorization and are not embedded in GitHub Pages.
+- LIVE flow: PepeBridge -> Minecraft Agent -> PEPE MANAGER -> `/api/public/status` -> `minecraft.html`.

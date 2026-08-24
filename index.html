@@ -1,443 +1,277 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#090c0a">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon-180.svg">
-  <meta name="description" content="PEPE RESTAURANT 공식 홈페이지">
-  <meta property="og:title" content="PEPE RESTAURANT">
-  <meta property="og:description" content="PEPE RESTAURANT 공식 커뮤니티">
-  <meta property="og:type" content="website">
-  <title>PEPE RESTAURANT</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css?v=1.4.2">
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#090c0a" name="theme-color"/>
+<link href="favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="icon-180.svg" rel="apple-touch-icon"/>
+<meta content="PEPE RESTAURANT 공식 홈페이지" name="description"/>
+<meta content="PEPE RESTAURANT" property="og:title"/>
+<meta content="PEPE RESTAURANT 공식 커뮤니티" property="og:description"/>
+<meta content="website" property="og:type"/>
+<title>PEPE RESTAURANT</title>
+<link href="manifest.json" rel="manifest"/>
+<link href="style.css?v=1.5.0" rel="stylesheet"/>
 </head>
 <body>
-  <div class="bg-glow"></div>
+<div class="bg-glow"></div>
+<nav>
+<a class="brand" href="#top">🐸 <span>PEPE RESTAURANT</span></a>
+<div class="nav-links">
+<a href="#about">소개</a>
+<a href="#system">시스템</a>
+<a href="minecraft.html">Minecraft</a>
+<a href="#discord">Discord</a>
+<a href="#staff">운영진</a>
+<a href="#notices">공지</a>
+<a class="join" href="request.html">초대 요청</a>
+</div>
+</nav>
+<header id="top">
+<div class="hero-left">
+<small>OFFICIAL COMMUNITY</small>
+<h1>WELCOME TO<br/><em>PEPE RESTAURANT</em></h1>
+<p>사람, 게임, 이야기 그리고 우리가 직접 만드는 시스템.<br/>PEPE RESTAURANT 공식 커뮤니티에 오신 것을 환영합니다.</p>
+<div class="hero-actions">
+<a class="button" href="request.html">Discord 초대 요청 ↗</a>
+<a class="button ghost" href="minecraft.html">Minecraft 접속정보</a>
+</div>
+</div>
+<aside class="hero-status card">
+<div class="status-head">
+<div>
+<span class="label">LIVE STATUS</span>
+<strong id="overall-state">상태 확인 중...</strong>
+</div>
+<span class="dot loading" id="overall-dot"></span>
+</div>
+<div class="status-grid">
+<div><small>MINECRAFT</small><b id="mc-main-state">-</b></div>
+<div><small>DISCORD</small><b id="discord-main-state">-</b></div>
+<div><small>PLAYERS</small><b id="player-count">-</b></div>
+<div><small>MEMBERS</small><b id="discord-member-count">-</b></div>
+</div>
+<button class="mini" id="refresh-all">전체 상태 새로고침</button>
+</aside>
+</header>
+<main>
+<section id="about">
+<small>ABOUT US</small>
+<h2>그냥 디스코드 서버가 아닙니다.</h2>
+<p class="lead">편하게 이야기하고 함께 게임을 즐기는 커뮤니티이자, 필요한 기능을 직접 만들고 개선해 나가는 공간입니다.</p>
+<div class="grid three">
+<article>💬<h3>Community</h3><p>자유로운 대화와 함께 즐기는 커뮤니티.</p></article>
+<article>🛠️<h3>Self-Built</h3><p>운영 환경에 맞춰 직접 개발하는 전용 시스템.</p></article>
+<article>🎮<h3>Gaming</h3><p>Minecraft를 비롯한 다양한 게임을 함께.</p></article>
+</div>
+</section>
+<section id="system">
+<small>PEPE SYSTEMS</small>
+<h2>우리 서버를 위해 직접 만듭니다.</h2>
+<div class="grid two system-grid">
+<article class="system-card">
+<h3>🛡️ PEPE MANAGER</h3>
+<p>PEPE RESTAURANT를 위해 직접 설계·개발한 통합 관리 봇. 서버·유저 관리, 활동 시스템, 티켓, 역할 및 운영 자동화를 담당합니다.</p>
+<div class="system-card-footer">
+<mark>IN-HOUSE</mark>
+<button class="system-more" data-system-modal="manager" type="button">자세히 보기 →</button>
+</div>
+</article>
+<article class="system-card">
+<h3>🤖 꼬붕봇</h3>
+<p>커뮤니티에서 사용하는 다양한 편의 기능을 제공하는 PEPE 전용 봇입니다.</p>
+<div class="system-card-footer">
+<mark>PEPE ONLY</mark>
+<button class="system-more" data-system-modal="kkobung" type="button">자세히 보기 →</button>
+</div>
+</article>
+</div>
+<div class="system-feature-grid">
+<button class="system-feature-card" data-system-modal="auth" type="button">
+<span class="system-feature-icon">🔐</span>
+<strong>인증 시스템</strong>
+<small>Discord ↔ Minecraft</small>
+<em>소개 보기 →</em>
+</button>
+<button class="system-feature-card" data-system-modal="activity" type="button">
+<span class="system-feature-icon">📊</span>
+<strong>활동 시스템</strong>
+<small>XP · 레벨 · 랭킹</small>
+<em>소개 보기 →</em>
+</button>
+<button class="system-feature-card" data-system-modal="ticket" type="button">
+<span class="system-feature-icon">🎫</span>
+<strong>티켓 시스템</strong>
+<small>문의 · 신고 · 지원</small>
+<em>소개 보기 →</em>
+</button>
+<button class="system-feature-card" data-system-modal="automation" type="button">
+<span class="system-feature-icon">⚙️</span>
+<strong>자동화</strong>
+<small>서버 전용 워크플로우</small>
+<em>소개 보기 →</em>
+</button>
+</div>
+</section>
+<section class="minecraft-hub-preview" id="minecraft">
+<div class="minecraft-hub-copy">
+<small>PEPE MINECRAFT</small>
+<h2>Minecraft는<br/>전용 페이지에서.</h2>
+<p class="lead">접속 정보, 실시간 서버 상태, 플레이어 현황, 서버 통계, 랭킹과 PEPE ORIGINAL PLUGINS까지 한곳에서 확인하세요.</p>
+<a class="button" href="minecraft.html">Minecraft 페이지 열기 →</a>
+</div>
+<a aria-label="PEPE Minecraft 전용 페이지 열기" class="minecraft-hub-card" href="minecraft.html">
+<span class="minecraft-hub-icon">⛏️</span>
+<div>
+<small>PEPE LIVE · 1.5.0</small>
+<strong>JAVA + BEDROCK</strong>
+<p>LIVE STATUS · PLAYERS · STATS · RANKING</p>
+</div>
+<em>ENTER →</em>
+</a>
+</section>
+<section id="discord">
+<small>DISCORD LIVE</small>
+<h2>지금 PEPE는.</h2>
+<div class="discord-panel">
+<article>
+<div class="discord-icon">💬</div>
+<div>
+<span class="muted">전체 멤버</span>
+<strong id="discord-total">-</strong>
+</div>
+</article>
+<article>
+<div class="discord-icon">🟢</div>
+<div>
+<span class="muted">온라인</span>
+<strong id="discord-online">-</strong>
+</div>
+</article>
+<article class="discord-wide">
+<div>
+<span class="muted">SERVER</span>
+<strong id="discord-name">PEPE RESTAURANT</strong>
+<p id="discord-status-text">Discord 상태를 확인하고 있습니다.</p>
+<p class="discord-meta">Manager <b id="manager-status">-</b> · Uptime <b id="manager-uptime">-</b> · Ping <b id="manager-ping">-</b></p>
+</div>
+<a class="button" href="request.html">서버 입장 ↗</a>
+</article>
+</div>
+<p class="hint">※ Discord 및 Minecraft 상태는 PEPE MANAGER에서 실시간으로 제공합니다.</p>
+</section>
+<section id="staff">
+<small>TEAM PEPE</small>
+<h2>운영진</h2>
+<div class="staff-grid" id="staff-list"></div>
+</section>
+<section id="rules">
+<small>SERVER RULES</small>
+<h2>간단하고 확실하게.</h2>
+<div class="rules">
+<div><span>01</span><p><b>핵·치트 사용 금지</b><br/>악성 클라이언트 및 불공정 플레이를 금지합니다.</p></div>
+<div><span>02</span><p><b>고의적인 서버 방해 금지</b><br/>테러, 도배, 악의적인 서버 방해 행위를 금지합니다.</p></div>
+<div><span>03</span><p><b>다른 유저 존중</b><br/>건축물, 아이템, 플레이 영역을 존중해주세요.</p></div>
+<div><span>04</span><p><b>운영진 안내 준수</b><br/>분쟁 발생 시 운영진의 안내를 따라주세요.</p></div>
+</div>
+</section>
+<section id="notices">
+<div class="section-title-row">
+<div>
+<small>ANNOUNCEMENTS</small>
+<h2>공지사항</h2>
+</div>
+<div class="filters">
+<button class="filter active" data-filter="all">전체</button>
+<button class="filter" data-filter="notice">공지</button>
+<button class="filter" data-filter="update">업데이트</button>
+<button class="filter" data-filter="minecraft">Minecraft</button>
+</div>
+</div>
+<div class="timeline" id="notices-list"></div>
+<div class="notice-more-wrap">
+<button class="notice-more-btn" hidden="" id="notice-toggle" type="button">더보기</button>
+</div>
+</section>
+<section id="faq">
+<small>FAQ</small>
+<h2>자주 묻는 질문</h2>
+<p class="faq-lead">가입부터 Minecraft 접속까지 자주 묻는 내용을 정리했습니다.</p>
+<div class="faq-list">
+<details>
+<summary>PEPE RESTAURANT는 어떤 서버인가요?</summary>
+<p>게임, 대화와 커뮤니티 활동을 중심으로 운영되는 PEPE 전용 서버입니다. PEPE MANAGER, 인증 시스템, 홈페이지와 관리자 도구 등 운영에 필요한 시스템도 직접 제작하고 있습니다.</p>
+</details>
+<details>
+<summary>Discord 초대 링크는 어디서 받을 수 있나요?</summary>
+<p>초대 링크는 공개하지 않습니다. 홈페이지의 <b>Discord 초대 요청</b> 페이지에서 Discord 계정으로 요청을 제출하면 운영진이 확인해 승인 또는 거절합니다. 승인된 계정에만 초대 링크가 표시됩니다.</p>
+</details>
+<details>
+<summary>Minecraft 서버 주소는 어떻게 확인하나요?</summary>
+<p>Minecraft 인증 역할을 가진 유저 또는 Discord 초대 요청이 승인된 유저는 Minecraft 전용 페이지에서 승인 상태를 확인한 뒤 Java/Bedrock 접속 주소를 볼 수 있습니다.</p>
+</details>
+<details>
+<summary>초대 요청이 승인됐는데 서버 주소를 볼 때 다시 인증해야 하나요?</summary>
+<p>같은 브라우저에서는 승인 정보가 일정 시간 유지되므로 보통 다시 인증할 필요가 없습니다. 쿠키나 사이트 저장 데이터를 삭제했거나 인증 정보가 만료된 경우에는 다시 Discord 계정 확인이 필요할 수 있습니다.</p>
+</details>
+<details>
+<summary>Java와 Bedrock 둘 다 접속할 수 있나요?</summary>
+<p>네. PEPE Minecraft는 Java + Bedrock Crossplay를 지원합니다. 승인된 멤버에게 각 에디션의 접속 정보를 Minecraft 전용 페이지에서 제공합니다.</p>
+</details>
+<details>
+<summary>Minecraft 인증 역할은 어떻게 받나요?</summary>
+<p>Discord의 Minecraft 인증 시스템에서 인증 요청을 제출하고 운영진 승인을 받으면 <b>✅ MINECRAFT 인증</b> 역할이 지급됩니다. 이후 Java 또는 Bedrock 닉네임을 등록해 계정을 연결할 수 있습니다.</p>
+</details>
+<details>
+<summary>인증 요청이나 초대 요청이 거절되면 어떻게 하나요?</summary>
+<p>거절 사유가 해결된 뒤 다시 요청할 수 있습니다. 반복적인 허위 요청이나 서버 규칙을 위반하는 요청은 제한될 수 있습니다.</p>
+</details>
+<details>
+<summary>PEPE MANAGER와 꼬붕봇은 어떤 봇인가요?</summary>
+<p><b>PEPE MANAGER</b>는 서버 운영, 인증, 활동, 티켓과 자동화를 담당하는 자체 제작 관리 봇이고, <b>꼬붕봇</b>은 커뮤니티 편의 기능을 담당하는 PEPE 전용 봇입니다.</p>
+</details>
+<details>
+<summary>문의나 신고는 어디서 하나요?</summary>
+<p>Discord의 티켓 시스템을 이용해 문의·신고·지원 요청을 접수할 수 있습니다. 공개 채널에서 다루기 어려운 내용은 티켓을 이용해주세요.</p>
+</details>
+<details>
+<summary>홈페이지 공지와 Discord 공지는 같은 내용인가요?</summary>
+<p>홈페이지의 공지·업데이트·Minecraft 소식은 PEPE MANAGER와 연동되어 Discord 공지 채널에도 분류별 임베드 형태로 자동 게시됩니다.</p>
+</details>
+</div>
+<div class="faq-more-wrap">
+<button class="faq-more-btn" hidden="" id="faq-toggle" type="button">더보기</button>
+</div>
+</section>
+<section class="cta">
+<div>🐸</div>
+<h2>READY TO JOIN?</h2>
+<p>PEPE RESTAURANT에서 만나요.</p>
+<a class="button" href="request.html">Discord 초대 요청 ↗</a>
+</section>
+</main>
+<footer>
+<b>🐸 PEPE RESTAURANT</b>
+<span>© 2026 PEPE RESTAURANT</span>
+</footer>
+<button aria-label="맨 위로" id="top-button">↑</button>
+<div id="toast">복사 완료!</div>
+<div aria-hidden="true" class="system-modal" id="system-modal">
+<div class="system-modal-backdrop" data-system-close=""></div>
+<section aria-labelledby="system-modal-title" aria-modal="true" class="system-modal-panel" role="dialog">
+<button aria-label="닫기" class="system-modal-close" data-system-close="" type="button">×</button>
+<div class="system-modal-icon" id="system-modal-icon">🐸</div>
+<small id="system-modal-kicker">PEPE SYSTEMS</small>
+<h2 id="system-modal-title">PEPE MANAGER</h2>
+<p class="system-modal-lead" id="system-modal-lead"></p>
+<div class="system-modal-body" id="system-modal-body"></div>
+<div class="system-modal-tags" id="system-modal-tags"></div>
+</section>
+</div>
 
-  <nav>
-    <a class="brand" href="#top">🐸 <span>PEPE RESTAURANT</span></a>
-    <div class="nav-links">
-      <a href="#about">소개</a>
-      <a href="#system">시스템</a>
-      <a href="#mc">Minecraft</a>
-      <a href="#discord">Discord</a>
-      <a href="#staff">운영진</a>
-      <a href="#notices">공지</a>
-      <a class="join" href="request.html">초대 요청</a>
-    </div>
-  </nav>
-
-  <header id="top">
-    <div class="hero-left">
-      <small>OFFICIAL COMMUNITY</small>
-      <h1>WELCOME TO<br><em>PEPE RESTAURANT</em></h1>
-      <p>사람, 게임, 이야기 그리고 우리가 직접 만드는 시스템.<br>PEPE RESTAURANT 공식 커뮤니티에 오신 것을 환영합니다.</p>
-      <div class="hero-actions">
-        <a class="button" href="request.html">Discord 초대 요청 ↗</a>
-        <a class="button ghost" href="#mc">Minecraft 접속정보</a>
-      </div>
-    </div>
-
-    <aside class="hero-status card">
-      <div class="status-head">
-        <div>
-          <span class="label">LIVE STATUS</span>
-          <strong id="overall-state">상태 확인 중...</strong>
-        </div>
-        <span class="dot loading" id="overall-dot"></span>
-      </div>
-
-      <div class="status-grid">
-        <div><small>MINECRAFT</small><b id="mc-main-state">-</b></div>
-        <div><small>DISCORD</small><b id="discord-main-state">-</b></div>
-        <div><small>PLAYERS</small><b id="player-count">-</b></div>
-        <div><small>MEMBERS</small><b id="discord-member-count">-</b></div>
-      </div>
-
-      <button class="mini" id="refresh-all">전체 상태 새로고침</button>
-    </aside>
-  </header>
-
-  <main>
-    <section id="about">
-      <small>ABOUT US</small>
-      <h2>그냥 디스코드 서버가 아닙니다.</h2>
-      <p class="lead">편하게 이야기하고 함께 게임을 즐기는 커뮤니티이자, 필요한 기능을 직접 만들고 개선해 나가는 공간입니다.</p>
-      <div class="grid three">
-        <article>💬<h3>Community</h3><p>자유로운 대화와 함께 즐기는 커뮤니티.</p></article>
-        <article>🛠️<h3>Self-Built</h3><p>운영 환경에 맞춰 직접 개발하는 전용 시스템.</p></article>
-        <article>🎮<h3>Gaming</h3><p>Minecraft를 비롯한 다양한 게임을 함께.</p></article>
-      </div>
-    </section>
-
-    <section id="system">
-      <small>PEPE SYSTEMS</small>
-      <h2>우리 서버를 위해 직접 만듭니다.</h2>
-
-      <div class="grid two system-grid">
-        <article class="system-card">
-          <h3>🛡️ PEPE MANAGER</h3>
-          <p>PEPE RESTAURANT를 위해 직접 설계·개발한 통합 관리 봇. 서버·유저 관리, 활동 시스템, 티켓, 역할 및 운영 자동화를 담당합니다.</p>
-          <div class="system-card-footer">
-            <mark>IN-HOUSE</mark>
-            <button class="system-more" type="button" data-system-modal="manager">자세히 보기 →</button>
-          </div>
-        </article>
-
-        <article class="system-card">
-          <h3>🤖 꼬붕봇</h3>
-          <p>커뮤니티에서 사용하는 다양한 편의 기능을 제공하는 PEPE 전용 봇입니다.</p>
-          <div class="system-card-footer">
-            <mark>PEPE ONLY</mark>
-            <button class="system-more" type="button" data-system-modal="kkobung">자세히 보기 →</button>
-          </div>
-        </article>
-      </div>
-
-      <div class="system-feature-grid">
-        <button class="system-feature-card" type="button" data-system-modal="auth">
-          <span class="system-feature-icon">🔐</span>
-          <strong>인증 시스템</strong>
-          <small>Discord ↔ Minecraft</small>
-          <em>소개 보기 →</em>
-        </button>
-
-        <button class="system-feature-card" type="button" data-system-modal="activity">
-          <span class="system-feature-icon">📊</span>
-          <strong>활동 시스템</strong>
-          <small>XP · 레벨 · 랭킹</small>
-          <em>소개 보기 →</em>
-        </button>
-
-        <button class="system-feature-card" type="button" data-system-modal="ticket">
-          <span class="system-feature-icon">🎫</span>
-          <strong>티켓 시스템</strong>
-          <small>문의 · 신고 · 지원</small>
-          <em>소개 보기 →</em>
-        </button>
-
-        <button class="system-feature-card" type="button" data-system-modal="automation">
-          <span class="system-feature-icon">⚙️</span>
-          <strong>자동화</strong>
-          <small>서버 전용 워크플로우</small>
-          <em>소개 보기 →</em>
-        </button>
-      </div>
-    </section>
-
-    <section id="mc" class="mc">
-      <div class="mc-intro">
-        <small>PEPE MINECRAFT</small>
-        <h2>Java + Bedrock<br>Crossplay</h2>
-        <p class="lead">PEPE 멤버를 위한 Minecraft 서버. Discord ↔ Minecraft 인증 시스템을 통해 운영됩니다.</p>
-
-        <div class="mc-live">
-          <span class="dot loading" id="java-dot"></span>
-          <span>Java <b id="java-live">확인 중</b></span>
-          <span class="dot loading" id="bedrock-dot"></span>
-          <span>Bedrock <b id="bedrock-live">확인 중</b></span>
-        </div>
-        <div class="mc-version-line">
-          <span>🧩 서버 버전</span>
-          <b id="mc-version-live">확인 중</b>
-        </div>
-
-        <button class="mc-about-button" type="button" data-mc-modal="overview">
-          ⛏️ Minecraft 서버 소개 보기 →
-        </button>
-      </div>
-
-      <article class="server">
-        <div id="server-link-locked">
-          <b>🔐 승인된 멤버 전용</b>
-          <p>Minecraft 인증 유저 또는 Discord 초대 요청이 승인된 유저는 서버 접속 주소를 확인할 수 있습니다.</p>
-          <button class="verified-login" id="verified-login">승인 상태 확인 / Discord 인증</button>
-          <p class="auth-message" id="auth-message"></p>
-        </div>
-
-        <div id="server-link-unlocked" hidden>
-          <div class="server-row">
-            <div>
-              <b>💻 Java Edition</b>
-              <code id="java-address">인증 후 표시</code>
-            </div>
-            <button data-copy-target="java-address">복사</button>
-          </div>
-          <hr>
-          <div class="server-row">
-            <div>
-              <b>📱 Bedrock Edition</b>
-              <code id="bedrock-address">인증 후 표시</code>
-            </div>
-            <button data-copy-target="bedrock-address">복사</button>
-          </div>
-          <p>✅ 승인된 계정입니다.</p>
-          <button class="auth-logout" id="auth-logout">인증 정보 지우기</button>
-        </div>
-      </article>
-
-      <div class="mc-feature-grid">
-        <button class="mc-feature-card" type="button" data-mc-modal="crossplay">
-          <span>🌐</span>
-          <strong>Crossplay</strong>
-          <small>Java + Bedrock</small>
-          <em>소개 보기 →</em>
-        </button>
-
-        <button class="mc-feature-card" type="button" data-mc-modal="access">
-          <span>🔐</span>
-          <strong>승인제 운영</strong>
-          <small>Discord 인증 · 초대 승인</small>
-          <em>소개 보기 →</em>
-        </button>
-
-        <button class="mc-feature-card" type="button" data-mc-modal="account">
-          <span>🔗</span>
-          <strong>계정 연동</strong>
-          <small>Java · Bedrock 닉네임</small>
-          <em>소개 보기 →</em>
-        </button>
-
-        <button class="mc-feature-card" type="button" data-mc-modal="status">
-          <span>📡</span>
-          <strong>실시간 상태</strong>
-          <small>접속자 · TPS · 버전</small>
-          <em>소개 보기 →</em>
-        </button>
-      </div>
-
-      <section class="pepe-original" aria-labelledby="pepe-original-title">
-        <div class="pepe-original-head">
-          <small>🐸 PEPE ORIGINAL PLUGINS</small>
-          <h3 id="pepe-original-title">우리 서버를 위해 직접 개발합니다.</h3>
-          <p>PEPE Minecraft의 운영 방식과 커뮤니티에 맞춰 직접 설계·개발한 전용 플러그인입니다.</p>
-        </div>
-
-        <div class="pepe-plugin-grid">
-          <button class="pepe-plugin-card" type="button" data-mc-modal="plugin-adminbridge">
-            <div class="pepe-plugin-title"><strong>PepeAdminBridge</strong><span>IN-HOUSE</span></div>
-            <p>외부 관리자 도구와 서버 관리 데이터를 연결하는 전용 브리지.</p>
-            <em>상세 기능 보기 →</em>
-          </button>
-          <button class="pepe-plugin-card" type="button" data-mc-modal="plugin-auth">
-            <div class="pepe-plugin-title"><strong>PepeAuth</strong><span>IN-HOUSE</span></div>
-            <p>인증된 멤버 중심으로 서버 접속을 관리하는 PEPE 인증 시스템.</p>
-            <em>상세 기능 보기 →</em>
-          </button>
-          <button class="pepe-plugin-card" type="button" data-mc-modal="plugin-bedrock">
-            <div class="pepe-plugin-title"><strong>PepeBedrock</strong><span>IN-HOUSE</span></div>
-            <p>Java·Bedrock 접속 환경을 구분하고 안내하는 크로스플랫폼 기능.</p>
-            <em>상세 기능 보기 →</em>
-          </button>
-          <button class="pepe-plugin-card" type="button" data-mc-modal="plugin-bridge">
-            <div class="pepe-plugin-title"><strong>PepeBridge</strong><span>IN-HOUSE</span></div>
-            <p>TPS와 접속자 상태를 서버 매니저에 전달하는 경량 상태 브리지.</p>
-            <em>상세 기능 보기 →</em>
-          </button>
-          <button class="pepe-plugin-card" type="button" data-mc-modal="plugin-core">
-            <div class="pepe-plugin-title"><strong>PepeCore</strong><span>IN-HOUSE</span></div>
-            <p>도움말부터 화이트리스트·저장·종료까지 담당하는 서버 코어.</p>
-            <em>상세 기능 보기 →</em>
-          </button>
-          <button class="pepe-plugin-card" type="button" data-mc-modal="plugin-death">
-            <div class="pepe-plugin-title"><strong>PepeDeath</strong><span>IN-HOUSE</span></div>
-            <p>마지막 사망 위치 기록과 위치 확인·복귀를 지원하는 시스템.</p>
-            <em>상세 기능 보기 →</em>
-          </button>
-          <button class="pepe-plugin-card" type="button" data-mc-modal="plugin-features">
-            <div class="pepe-plugin-title"><strong>PepeServerFeatures</strong><span>IN-HOUSE</span></div>
-            <p>플레이어 통계·등급·인증 연동 기능을 담당하는 야생 서버 기능팩.</p>
-            <em>상세 기능 보기 →</em>
-          </button>
-          <button class="pepe-plugin-card" type="button" data-mc-modal="plugin-suite">
-            <div class="pepe-plugin-title"><strong>PepeServerSuite</strong><span>IN-HOUSE</span></div>
-            <p>사이드바·서버 안내·인증 상태 UI를 통합하는 PEPE 서버 스위트.</p>
-            <em>상세 기능 보기 →</em>
-          </button>
-        </div>
-      </section>
-    </section>
-
-    <section id="discord">
-      <small>DISCORD LIVE</small>
-      <h2>지금 PEPE는.</h2>
-
-      <div class="discord-panel">
-        <article>
-          <div class="discord-icon">💬</div>
-          <div>
-            <span class="muted">전체 멤버</span>
-            <strong id="discord-total">-</strong>
-          </div>
-        </article>
-
-        <article>
-          <div class="discord-icon">🟢</div>
-          <div>
-            <span class="muted">온라인</span>
-            <strong id="discord-online">-</strong>
-          </div>
-        </article>
-
-        <article class="discord-wide">
-          <div>
-            <span class="muted">SERVER</span>
-            <strong id="discord-name">PEPE RESTAURANT</strong>
-            <p id="discord-status-text">Discord 상태를 확인하고 있습니다.</p>
-            <p class="discord-meta">Manager <b id="manager-status">-</b> · Uptime <b id="manager-uptime">-</b> · Ping <b id="manager-ping">-</b></p>
-          </div>
-          <a class="button" href="request.html">서버 입장 ↗</a>
-        </article>
-      </div>
-
-      <p class="hint">※ Discord 및 Minecraft 상태는 PEPE MANAGER에서 실시간으로 제공합니다.</p>
-    </section>
-
-    <section id="staff">
-      <small>TEAM PEPE</small>
-      <h2>운영진</h2>
-      <div class="staff-grid" id="staff-list"></div>
-    </section>
-
-    <section id="rules">
-      <small>SERVER RULES</small>
-      <h2>간단하고 확실하게.</h2>
-      <div class="rules">
-        <div><span>01</span><p><b>핵·치트 사용 금지</b><br>악성 클라이언트 및 불공정 플레이를 금지합니다.</p></div>
-        <div><span>02</span><p><b>고의적인 서버 방해 금지</b><br>테러, 도배, 악의적인 서버 방해 행위를 금지합니다.</p></div>
-        <div><span>03</span><p><b>다른 유저 존중</b><br>건축물, 아이템, 플레이 영역을 존중해주세요.</p></div>
-        <div><span>04</span><p><b>운영진 안내 준수</b><br>분쟁 발생 시 운영진의 안내를 따라주세요.</p></div>
-      </div>
-    </section>
-
-    <section id="notices">
-      <div class="section-title-row">
-        <div>
-          <small>ANNOUNCEMENTS</small>
-          <h2>공지사항</h2>
-        </div>
-        <div class="filters">
-          <button class="filter active" data-filter="all">전체</button>
-          <button class="filter" data-filter="notice">공지</button>
-          <button class="filter" data-filter="update">업데이트</button>
-          <button class="filter" data-filter="minecraft">Minecraft</button>
-        </div>
-      </div>
-      <div class="timeline" id="notices-list"></div>
-      <div class="notice-more-wrap">
-        <button id="notice-toggle" class="notice-more-btn" type="button" hidden>더보기</button>
-      </div>
-    </section>
-
-    <section id="faq">
-      <small>FAQ</small>
-      <h2>자주 묻는 질문</h2>
-      <p class="faq-lead">가입부터 Minecraft 접속까지 자주 묻는 내용을 정리했습니다.</p>
-
-      <div class="faq-list">
-        <details>
-          <summary>PEPE RESTAURANT는 어떤 서버인가요?</summary>
-          <p>게임, 대화와 커뮤니티 활동을 중심으로 운영되는 PEPE 전용 서버입니다. PEPE MANAGER, 인증 시스템, 홈페이지와 관리자 도구 등 운영에 필요한 시스템도 직접 제작하고 있습니다.</p>
-        </details>
-
-        <details>
-          <summary>Discord 초대 링크는 어디서 받을 수 있나요?</summary>
-          <p>초대 링크는 공개하지 않습니다. 홈페이지의 <b>Discord 초대 요청</b> 페이지에서 Discord 계정으로 요청을 제출하면 운영진이 확인해 승인 또는 거절합니다. 승인된 계정에만 초대 링크가 표시됩니다.</p>
-        </details>
-
-        <details>
-          <summary>Minecraft 서버 주소는 어떻게 확인하나요?</summary>
-          <p>Minecraft 인증 역할을 가진 유저 또는 Discord 초대 요청이 승인된 유저는 홈페이지 Minecraft 영역에서 승인 상태를 확인한 뒤 Java/Bedrock 접속 주소를 볼 수 있습니다.</p>
-        </details>
-
-        <details>
-          <summary>초대 요청이 승인됐는데 서버 주소를 볼 때 다시 인증해야 하나요?</summary>
-          <p>같은 브라우저에서는 승인 정보가 일정 시간 유지되므로 보통 다시 인증할 필요가 없습니다. 쿠키나 사이트 저장 데이터를 삭제했거나 인증 정보가 만료된 경우에는 다시 Discord 계정 확인이 필요할 수 있습니다.</p>
-        </details>
-
-        <details>
-          <summary>Java와 Bedrock 둘 다 접속할 수 있나요?</summary>
-          <p>네. PEPE Minecraft는 Java + Bedrock Crossplay를 지원합니다. 승인된 멤버에게 각 에디션의 접속 정보를 홈페이지에서 제공합니다.</p>
-        </details>
-
-        <details>
-          <summary>Minecraft 인증 역할은 어떻게 받나요?</summary>
-          <p>Discord의 Minecraft 인증 시스템에서 인증 요청을 제출하고 운영진 승인을 받으면 <b>✅ MINECRAFT 인증</b> 역할이 지급됩니다. 이후 Java 또는 Bedrock 닉네임을 등록해 계정을 연결할 수 있습니다.</p>
-        </details>
-
-        <details>
-          <summary>인증 요청이나 초대 요청이 거절되면 어떻게 하나요?</summary>
-          <p>거절 사유가 해결된 뒤 다시 요청할 수 있습니다. 반복적인 허위 요청이나 서버 규칙을 위반하는 요청은 제한될 수 있습니다.</p>
-        </details>
-
-        <details>
-          <summary>PEPE MANAGER와 꼬붕봇은 어떤 봇인가요?</summary>
-          <p><b>PEPE MANAGER</b>는 서버 운영, 인증, 활동, 티켓과 자동화를 담당하는 자체 제작 관리 봇이고, <b>꼬붕봇</b>은 커뮤니티 편의 기능을 담당하는 PEPE 전용 봇입니다.</p>
-        </details>
-
-        <details>
-          <summary>문의나 신고는 어디서 하나요?</summary>
-          <p>Discord의 티켓 시스템을 이용해 문의·신고·지원 요청을 접수할 수 있습니다. 공개 채널에서 다루기 어려운 내용은 티켓을 이용해주세요.</p>
-        </details>
-
-        <details>
-          <summary>홈페이지 공지와 Discord 공지는 같은 내용인가요?</summary>
-          <p>홈페이지의 공지·업데이트·Minecraft 소식은 PEPE MANAGER와 연동되어 Discord 공지 채널에도 분류별 임베드 형태로 자동 게시됩니다.</p>
-        </details>
-      </div>
-      <div class="faq-more-wrap">
-        <button id="faq-toggle" class="faq-more-btn" type="button" hidden>더보기</button>
-      </div>
-    </section>
-
-    <section class="cta">
-      <div>🐸</div>
-      <h2>READY TO JOIN?</h2>
-      <p>PEPE RESTAURANT에서 만나요.</p>
-      <a class="button" href="request.html">Discord 초대 요청 ↗</a>
-    </section>
-  </main>
-
-  <footer>
-    <b>🐸 PEPE RESTAURANT</b>
-    <span>© 2026 PEPE RESTAURANT</span>
-  </footer>
-
-  <button id="top-button" aria-label="맨 위로">↑</button>
-  <div id="toast">복사 완료!</div>
-
-  <div class="system-modal" id="system-modal" aria-hidden="true">
-    <div class="system-modal-backdrop" data-system-close></div>
-    <section class="system-modal-panel" role="dialog" aria-modal="true" aria-labelledby="system-modal-title">
-      <button class="system-modal-close" type="button" data-system-close aria-label="닫기">×</button>
-      <div class="system-modal-icon" id="system-modal-icon">🐸</div>
-      <small id="system-modal-kicker">PEPE SYSTEMS</small>
-      <h2 id="system-modal-title">PEPE MANAGER</h2>
-      <p class="system-modal-lead" id="system-modal-lead"></p>
-      <div class="system-modal-body" id="system-modal-body"></div>
-      <div class="system-modal-tags" id="system-modal-tags"></div>
-    </section>
-  </div>
-
-
-  <div class="mc-modal" id="mc-modal" aria-hidden="true">
-    <div class="mc-modal-backdrop" data-mc-close></div>
-    <section class="mc-modal-panel" role="dialog" aria-modal="true" aria-labelledby="mc-modal-title">
-      <button class="mc-modal-close" type="button" data-mc-close aria-label="닫기">×</button>
-      <div class="mc-modal-icon" id="mc-modal-icon">⛏️</div>
-      <small id="mc-modal-kicker">PEPE MINECRAFT</small>
-      <h2 id="mc-modal-title">Minecraft Server</h2>
-      <p class="mc-modal-lead" id="mc-modal-lead"></p>
-      <div class="mc-modal-body" id="mc-modal-body"></div>
-      <div class="mc-modal-tags" id="mc-modal-tags"></div>
-    </section>
-  </div>
-
-
-  <script src="config.js?v=1.4.2"></script>
-  <script src="script.js?v=1.4.2"></script>
+<script src="config.js?v=1.5.0"></script>
+<script src="script.js?v=1.5.0"></script>
 </body>
 </html>

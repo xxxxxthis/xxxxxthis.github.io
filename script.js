@@ -648,3 +648,74 @@ document.querySelectorAll("#faq details").forEach(item => {
     });
   });
 });
+
+// ===== FAQ MORE / HIDE =====
+(() => {
+  const list = document.querySelector("#faq .faq-list");
+  const toggle = document.querySelector("#faq-toggle");
+  if (!list || !toggle) return;
+
+  const COLLAPSED = 5;
+  const items = [...list.querySelectorAll(":scope > details")];
+  let expanded = false;
+
+  const render = () => {
+    items.forEach((item, i) => {
+      item.hidden = !expanded && i >= COLLAPSED;
+      if (item.hidden) item.open = false;
+    });
+
+    if (items.length <= COLLAPSED) {
+      toggle.hidden = true;
+      return;
+    }
+
+    toggle.hidden = false;
+    toggle.textContent = expanded
+      ? "숨기기 ↑"
+      : `더보기 +${items.length - COLLAPSED}`;
+  };
+
+  toggle.addEventListener("click", () => {
+    expanded = !expanded;
+    render();
+    if (!expanded) {
+      document.querySelector("#faq")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  });
+
+  render();
+})();
+
+// ===== LIVE MINECRAFT VERSION =====
+(() => {
+  const el = document.querySelector("#mc-version-live");
+  if (!el) return;
+
+  const pickVersion = data =>
+    data?.version ??
+    data?.minecraft?.version ??
+    data?.server?.version ??
+    data?.java?.version ??
+    data?.status?.version ??
+    null;
+
+  const updateVersion = async () => {
+    try {
+      const data = await apiFetch("/api/server-status");
+      const version = pickVersion(data);
+
+      el.textContent = version ? String(version) : "정보 없음";
+      el.classList.toggle("online", Boolean(version));
+    } catch {
+      el.textContent = "확인 불가";
+      el.classList.remove("online");
+    }
+  };
+
+  updateVersion();
+  setInterval(updateVersion, 60000);
+})();

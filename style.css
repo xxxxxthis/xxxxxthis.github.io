@@ -626,3 +626,30 @@ body.modal-open{overflow:hidden}
 
 @media(max-width:800px){.mc-feature-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:520px){.mc-feature-grid{grid-template-columns:1fr}.mc-modal{padding:12px}.mc-modal-panel{padding:28px 20px 22px;border-radius:18px}}
+
+
+/* ===== 1.4.1 FAQ MORE + MC VERSION ===== */
+.faq-more-wrap{display:flex;justify-content:center;margin-top:18px}
+.faq-more-btn{
+  border:1px solid #2d3930;
+  background:#121813;
+  color:#b8ff5a;
+  border-radius:10px;
+  padding:10px 16px;
+  font:inherit;
+  font-size:12px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.faq-more-btn:hover{background:#182019;border-color:#425246;transform:translateY(-1px)}
+.mc-version-line{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:13px;
+  color:#7f8982;
+  font-size:12px;
+}
+.mc-version-line b{color:#c9d2cb}
+.mc-version-line b.online{color:#b8ff5a}

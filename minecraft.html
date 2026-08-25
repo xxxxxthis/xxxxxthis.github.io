@@ -82,8 +82,8 @@
 </div>
 <article class="server">
 <div id="server-link-locked">
-<b>🔐 승인된 멤버 전용</b>
-<p>접속 주소는 승인된 PEPE 멤버에게만 표시됩니다. 상세 야생 기록과 랭킹은 Minecraft 인증 멤버 전용입니다.</p>
+<b>🔐 Minecraft 인증 멤버 전용</b>
+<p>Java/Bedrock 접속 주소는 Minecraft 인증을 완료한 PEPE 멤버에게만 표시됩니다. Discord 초대 승인과 Minecraft 인증은 별도의 절차입니다.</p>
 <button class="verified-login" id="verified-login">Discord로 인증하기</button>
 <p class="auth-message" id="auth-message"></p>
 </div>
@@ -97,7 +97,7 @@
 <div><b>📱 Bedrock Edition</b><code id="bedrock-address">인증 후 표시</code></div>
 <button data-copy-target="bedrock-address">복사</button>
 </div>
-<p>✅ 승인된 계정입니다.</p>
+<p>✅ Minecraft 인증 멤버입니다.</p>
 <button class="auth-logout" id="auth-logout">인증 정보 지우기</button>
 </div>
 </article>
@@ -105,7 +105,7 @@
 <button class="mc-feature-card" data-mc-modal="crossplay" type="button"><span>🌐</span><strong>Crossplay</strong><small>Java + Bedrock</small><em>소개 보기 →</em></button>
 <button class="mc-feature-card" data-mc-modal="access" type="button"><span>🔐</span><strong>승인제 운영</strong><small>Discord 인증 · 운영진 승인</small><em>소개 보기 →</em></button>
 <button class="mc-feature-card" data-mc-modal="account" type="button"><span>🔗</span><strong>계정 연동</strong><small>Java · Bedrock 닉네임</small><em>소개 보기 →</em></button>
-<button class="mc-feature-card" data-mc-modal="status" type="button"><span>🌿</span><strong>야생 서버</strong><small>함께 쌓이는 서버 기록</small><em>소개 보기 →</em></button>
+<button class="mc-feature-card" data-mc-modal="survival" type="button"><span>🌿</span><strong>야생 서버</strong><small>함께 쌓이는 서버 기록</small><em>소개 보기 →</em></button>
 </div>
 <section aria-labelledby="pepe-original-title" class="pepe-original" id="original">
 <div class="pepe-original-head">
@@ -190,6 +190,7 @@
 </div>
 <script src="config.js?v=1.5.0-final"></script>
 <script src="script.js?v=1.5.0-final"></script>
+<script src="minecraft-info-patch.js?v=1.0.0"></script>
 <script src="minecraft-member.js?v=1.6.0"></script>
 </body>
 </html>

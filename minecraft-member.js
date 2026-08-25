@@ -63,17 +63,37 @@
     const url=new URL(location.href);
     const fromUrl=url.searchParams.get("pepe_token");
     const fromSession=sessionStorage.getItem(KEY);
-    if(fromUrl)saveToken(fromUrl);
-    else if(fromSession)saveToken(fromSession);
+    if(fromUrl){
+      saveToken(fromUrl);
+      url.searchParams.delete("pepe_token");
+      history.replaceState({},"",url.pathname+url.search+url.hash);
+    }else if(fromSession){
+      saveToken(fromSession);
+    }
   }
 
   function setMemberState(unlocked,name=""){
     document.body.classList.toggle("mc-member-authenticated",!!unlocked);
-    const lock=$("#mc-member-lock"),open=$("#mc-member-open");
+
+    const lock=$("#mc-member-lock");
+    const open=$("#mc-member-open");
     if(lock)lock.hidden=!!unlocked;
     if(open)open.hidden=!unlocked;
+
     const who=$("#mc-member-name");
     if(who)who.textContent=name||"PEPE MEMBER";
+
+    // 기존 접속정보 카드도 MEMBER ZONE 인증 상태와 완전히 동기화한다.
+    // 인증 완료 후 Discord 인증 버튼이 다시 노출되는 모순된 UI를 방지한다.
+    const serverLocked=$("#server-link-locked");
+    const serverOpen=$("#server-link-unlocked");
+    const legacyLogin=$("#verified-login");
+    const authMessage=$("#auth-message");
+
+    if(serverLocked)serverLocked.hidden=!!unlocked;
+    if(serverOpen)serverOpen.hidden=!unlocked;
+    if(legacyLogin)legacyLogin.hidden=!!unlocked;
+    if(authMessage&&unlocked)authMessage.textContent="";
   }
 
   function fmt(v){
@@ -119,7 +139,6 @@
     Object.entries(values).forEach(([sel,val])=>{const el=$(sel);if(el)el.textContent=fmt(val)});
     const note=$("#stats-note");if(note)note.textContent="PEPE 인증 멤버에게만 제공되는 야생 서버 기록입니다.";
     const ja=$("#java-address"),ba=$("#bedrock-address");if(ja)ja.textContent=connection.javaAddress||"-";if(ba)ba.textContent=connection.bedrockAddress||"-";
-    const locked=$("#server-link-locked"),opened=$("#server-link-unlocked");if(locked)locked.hidden=true;if(opened)opened.hidden=false;
     const tps=$("#mc-member-tps"),uptime=$("#mc-member-uptime");if(tps)tps.textContent=server.tps==null?"-":Number(server.tps).toFixed(1);if(uptime)uptime.textContent=server.uptime||"-";
     renderRanking(data,rankingKey);
   }
@@ -144,9 +163,8 @@
 
   migrateOAuthToken();
   $("#mc-member-login")?.addEventListener("click",login);
-  $("#verified-login")?.addEventListener("click",()=>{});
   $("#auth-logout")?.addEventListener("click",()=>{clearToken();memberData=null;setMemberState(false);});
-  $("#mc-member-logout")?.addEventListener("click",()=>{clearToken();memberData=null;setMemberState(false);const locked=$("#server-link-locked"),opened=$("#server-link-unlocked");if(locked)locked.hidden=false;if(opened)opened.hidden=true;});
+  $("#mc-member-logout")?.addEventListener("click",()=>{clearToken();memberData=null;setMemberState(false);});
 
   $$(".ranking-tab").forEach(btn=>btn.addEventListener("click",()=>{rankingKey=btn.dataset.ranking||"playtime";if(memberData)renderRanking(memberData,rankingKey)}));
 

@@ -83,22 +83,33 @@
     const who=$("#mc-member-name");
     if(who)who.textContent=name||"PEPE MEMBER";
 
-    // 기존 접속정보 카드도 MEMBER ZONE 인증 상태와 완전히 동기화한다.
-    // 인증 완료 후 Discord 인증 버튼이 다시 노출되는 모순된 UI를 방지한다.
     const serverLocked=$("#server-link-locked");
     const serverOpen=$("#server-link-unlocked");
     const legacyLogin=$("#verified-login");
     const authMessage=$("#auth-message");
+    const access=$(".mc-public-access");
 
     if(serverLocked)serverLocked.hidden=!!unlocked;
     if(serverOpen)serverOpen.hidden=!unlocked;
     if(legacyLogin)legacyLogin.hidden=!!unlocked;
     if(authMessage&&unlocked)authMessage.textContent="";
+    if(access)access.textContent=unlocked?"VERIFIED":"MEMBER";
   }
 
   function fmt(v){
     if(v===undefined||v===null||v==="")return "-";
     return typeof v==="number"?v.toLocaleString("ko-KR"):String(v);
+  }
+
+  function ensureMemberMetric(id,label){
+    let el=document.getElementById(id);
+    if(el)return el;
+    const grid=$(".mc-member-mini-grid");
+    if(!grid)return null;
+    const wrap=document.createElement("div");
+    wrap.innerHTML=`<small>${label}</small><strong id="${id}">-</strong>`;
+    grid.appendChild(wrap);
+    return wrap.querySelector("strong");
   }
 
   function normalizePlayers(data){
@@ -119,11 +130,12 @@
   function renderRanking(data,key=rankingKey){
     const root=$("#mc-ranking-list");if(!root)return;
     const rows=rankingRows(data,key).slice(0,10);
-    if(!rows.length){root.innerHTML='<div class="mc-empty-state">아직 표시할 랭킹 데이터가 없습니다.</div>';return;}
+    if(!rows.length){root.innerHTML='<div class="mc-empty-state">아직 표시할 생존자 기록이 없습니다.</div>';return;}
     root.innerHTML=rows.map((r,i)=>{
       const name=typeof r==="string"?r:(r?.name||r?.username||r?.playerName||"Unknown");
       const value=typeof r==="string"?"":(r?.value??r?.score??r?.playtime??r?.kills??r?.deaths??r?.advancements??r?.weekly??"-");
-      return `<div class="mc-ranking-row"><span class="mc-ranking-pos">#${i+1}</span><strong class="mc-ranking-name">${String(name)}</strong><span class="mc-ranking-value">${fmt(value)}</span></div>`;
+      const rank=i===0?"🥇":i===1?"🥈":i===2?"🥉":`#${i+1}`;
+      return `<div class="mc-ranking-row"><span class="mc-ranking-pos">${rank}</span><strong class="mc-ranking-name">${String(name)}</strong><span class="mc-ranking-value">${fmt(value)}</span></div>`;
     }).join("");
   }
 
@@ -132,14 +144,28 @@
     const server=data?.server||{},connection=data?.connection||{},stats=data?.survival?.stats||{};
     const players=normalizePlayers(data);
     const playerRoot=$("#mc-player-list");
+
     if(playerRoot){
-      playerRoot.innerHTML=players.length?players.map(p=>`<article class="mc-player-card"><div class="mc-player-avatar">${p.avatar?`<img src="${p.avatar}" alt="" loading="lazy">`:"🙂"}</div><div><strong>${String(p.name)}</strong><small>${String(p.platform).toUpperCase()}</small></div></article>`).join(""):'<div class="mc-empty-state">현재 접속 중인 플레이어가 없습니다.</div>';
+      playerRoot.innerHTML=players.length?players.map(p=>`<article class="mc-player-card mc-survivor-card"><div class="mc-player-avatar">${p.avatar?`<img src="${p.avatar}" alt="" loading="lazy">`:"🙂"}</div><div class="mc-survivor-info"><strong>${String(p.name)}</strong><small>${String(p.platform).toUpperCase()}</small><span class="mc-survivor-online">● 생존 중</span></div></article>`).join(""):'<div class="mc-empty-state">현재 접속 중인 생존자가 없습니다.</div>';
     }
+
     const values={"#stat-total-players":stats.totalPlayers,"#stat-total-playtime":stats.totalPlaytime,"#stat-total-deaths":stats.totalDeaths,"#stat-advancements":stats.advancements};
     Object.entries(values).forEach(([sel,val])=>{const el=$(sel);if(el)el.textContent=fmt(val)});
-    const note=$("#stats-note");if(note)note.textContent="PEPE 인증 멤버에게만 제공되는 야생 서버 기록입니다.";
-    const ja=$("#java-address"),ba=$("#bedrock-address");if(ja)ja.textContent=connection.javaAddress||"-";if(ba)ba.textContent=connection.bedrockAddress||"-";
-    const tps=$("#mc-member-tps"),uptime=$("#mc-member-uptime");if(tps)tps.textContent=server.tps==null?"-":Number(server.tps).toFixed(1);if(uptime)uptime.textContent=server.uptime||"-";
+    const note=$("#stats-note");if(note)note.textContent="PEPE Minecraft 멤버들이 함께 쌓아 온 야생 서버 누적 기록입니다.";
+
+    const ja=$("#java-address"),ba=$("#bedrock-address");
+    if(ja)ja.textContent=connection.javaAddress||"-";
+    if(ba)ba.textContent=connection.bedrockAddress||"-";
+
+    const tps=$("#mc-member-tps");
+    const uptime=$("#mc-member-uptime");
+    const version=ensureMemberMetric("mc-member-version","SERVER VERSION");
+    const online=ensureMemberMetric("mc-member-online","SURVIVORS ONLINE");
+    if(tps)tps.textContent=server.tps==null?"-":Number(server.tps).toFixed(1);
+    if(uptime)uptime.textContent=server.uptime||"-";
+    if(version)version.textContent=server.version||"-";
+    if(online)online.textContent=`${server.playersOnline??0}/${server.playersMax??"-"}`;
+
     renderRanking(data,rankingKey);
   }
 
